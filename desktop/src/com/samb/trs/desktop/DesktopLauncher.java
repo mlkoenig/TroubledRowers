@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		config.vSyncEnabled = false;
 		config.foregroundFPS = 0; // Setting to 0 disables foreground fps throttling
 		config.backgroundFPS = 0; // Setting to 0 disables background fps throttling
+		config.samples = 3;
 		new LwjglApplication(new GameApplication(), config);
 	}
 }

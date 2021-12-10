@@ -3,11 +3,14 @@ package com.samb.trs.Systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.samb.trs.Components.BodyComponent;
 import com.samb.trs.Components.CameraComponent;
 import com.samb.trs.Model.Timer;
 import com.samb.trs.Utilities.Mappers;
+
+import java.util.Locale;
 
 import static com.samb.trs.Resources.Constants.*;
 
@@ -40,7 +43,7 @@ public class CameraSystem extends IteratingSystem {
         velocityIncreaseTimer.update(dt);
         if (velocityIncreaseTimer.passed(Camera.VELOCITY_INCREASE_TIMER)) {
             velocity = Math.min(Camera.MAX_VELOCITY, velocity + Camera.VELOCITY_INCREASE);
-            System.out.println("Increase");
+            Gdx.app.log("Game", String.format(Locale.getDefault(), "Increased velocity to %f", velocity));
         }
     }
 

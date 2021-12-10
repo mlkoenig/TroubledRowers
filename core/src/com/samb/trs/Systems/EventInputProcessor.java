@@ -108,7 +108,7 @@ public class EventInputProcessor implements InputProcessor {
             if (trf != null)
                 offset.set(trf.position.x - input.x, trf.position.y - input.y + BALANCE_FACTOR * engine.getSystem(CameraSystem.class).getDiff());
             else
-                System.err.println("TransformComponent for EventInputProcessor is not set! \n Player movement may not work properly.");
+                Gdx.app.error("InputError", "TransformComponent for EventInputProcessor is not set! \n Player movement may not work properly.");
             isDown = true;
         } else {
             lastTouch.set(screenX, screenY);

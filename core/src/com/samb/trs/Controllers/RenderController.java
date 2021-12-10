@@ -1,6 +1,7 @@
 package com.samb.trs.Controllers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -9,6 +10,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Shaders;
+
+import static com.samb.trs.Resources.Constants.Rendering.WorldHeight;
+import static com.samb.trs.Resources.Constants.Rendering.WorldWidth;
 
 public class RenderController extends BaseController{
 
@@ -23,13 +27,16 @@ public class RenderController extends BaseController{
         super(mainController);
         batch = new SpriteBatch(440);
         dynamicCamera = new OrthographicCamera();
-        dynamicViewport = new FitViewport(Constants.Rendering.WorldWidth, Constants.Rendering.WorldHeight, dynamicCamera);
+        dynamicViewport = new FitViewport(WorldWidth, Constants.Rendering.WorldHeight, dynamicCamera);
         box2DDebugRenderer = new Box2DDebugRenderer();
         shapeRenderer = new ShapeRenderer();
         shaderController = new ShaderController(mainController);
     }
 
     public void render(float dt) {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
+                | GL20.GL_DEPTH_BUFFER_BIT
+                | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
         getMain().getGameWorldController().update(dt);
     }
 
@@ -39,7 +46,7 @@ public class RenderController extends BaseController{
     }
 
     public static float p2w(float percent) {
-        return Constants.Rendering.WorldWidth * percent / 100f;
+        return WorldWidth * percent / 100f;
     }
 
     public static float p2h(float percent) {
@@ -52,7 +59,7 @@ public class RenderController extends BaseController{
      * @return virtual width
      */
     public static float cpw() {
-        return Constants.Rendering.WorldWidth / ((float) Gdx.graphics.getWidth());
+        return WorldWidth / ((float) Gdx.graphics.getWidth());
     }
 
     /**

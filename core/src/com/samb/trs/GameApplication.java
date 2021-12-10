@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Controllers.RenderController;
+import com.samb.trs.Resources.Constants;
 
 public class GameApplication implements ApplicationListener {
 	private MainController mainController;
@@ -34,10 +35,11 @@ public class GameApplication implements ApplicationListener {
 		fps = Gdx.graphics.getFramesPerSecond();
 		shadowSwitches = glProfiler.getShaderSwitches();
 
-		System.out.println("DrawCalls: " + drawCalls +
-				"\n TextureBinds: " + textureBinds +
-				"\n ShadowSwitches: " + shadowSwitches +
-				"\n FPS: " + fps);
+		if (Constants.General.DEBUGGING)
+			System.out.println("DrawCalls: " + drawCalls +
+					"\n TextureBinds: " + textureBinds +
+					"\n ShadowSwitches: " + shadowSwitches +
+					"\n FPS: " + fps);
 	}
 
 	@Override

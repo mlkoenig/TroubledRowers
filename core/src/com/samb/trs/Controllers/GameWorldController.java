@@ -2,6 +2,7 @@ package com.samb.trs.Controllers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.World;
 import com.samb.trs.Factories.EntityFactory;
 import com.samb.trs.Interfaces.Updatable;
@@ -30,7 +31,7 @@ public class GameWorldController extends BaseController implements Updatable {
         this.engine = engineController.getEngine();
         this.gameLogicSystem = engineController.getGameLogicSystem();
         this.score = engineController.getScore();
-        this.eventInputProcessor = engineController.getEip();
+        this.eventInputProcessor = engineController.getEventInputProcessor();
         resetGameWorld();
     }
 
@@ -56,6 +57,8 @@ public class GameWorldController extends BaseController implements Updatable {
         eventInputProcessor.setTransformComponent(Mappers.transform.get(player));
         eventInputProcessor.reset();
 
+        Gdx.input.setInputProcessor(eventInputProcessor);
+
         engine.addEntity(player);
         engine.getSystem(SpawnSystem.class).setPlayer(player);
         engine.getSystem(CameraSystem.class).setVelocity(START_VELOCITY);
@@ -70,5 +73,6 @@ public class GameWorldController extends BaseController implements Updatable {
     @Override
     public void dispose() {
         engineController.dispose();
+        eventInputProcessor.reset();
     }
 }
