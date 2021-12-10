@@ -1,12 +1,13 @@
 package com.samb.trs.Resources;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 
 public class Constants {
 
     // GENERAL CONSTANTS
     public static class General {
-        public static final boolean DEBUGGING = false;
+        public static final boolean DEBUGGING = true;
     }
 
     public static class Camera {
@@ -63,6 +64,10 @@ public class Constants {
         public static int calculateHeight(int width, int height) {
             return ((int) (height / ((float) width) * WorldWidth));
         }
+    }
+
+    public static class Fonts {
+        public static final Color DEFAULT_COLOR = Color.WHITE;
     }
 
 }

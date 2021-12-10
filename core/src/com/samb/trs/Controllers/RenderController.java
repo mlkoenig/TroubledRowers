@@ -21,19 +21,21 @@ import static com.samb.trs.Resources.Constants.Rendering.WorldWidth;
 public class RenderController extends BaseController{
 
     private final SpriteBatch batch;
-    private final FitViewport dynamicViewport;
-    private final OrthographicCamera dynamicCamera;
+    private final FitViewport staticViewport, dynamicViewport;
+    private final OrthographicCamera staticCamera, dynamicCamera;
     private final ShaderController shaderController;
     private final ShapeRenderer shapeRenderer;
-    private Vector2 iosSafeArea;
+    private final Vector2 iosSafeArea;
     private final Box2DDebugRenderer box2DDebugRenderer;
 
     public RenderController(MainController mainController) {
         super(mainController);
         batch = new SpriteBatch(440);
-        iosSafeArea = getIOSSafeArea();
+        iosSafeArea = getIOSSafeAreaInsets();
         dynamicCamera = new OrthographicCamera();
-        dynamicViewport = new FitViewport(WorldWidth, Constants.Rendering.WorldHeight, dynamicCamera);
+        staticCamera = new OrthographicCamera();
+        dynamicViewport = new FitViewport(Constants.Rendering.WorldWidth, Constants.Rendering.WorldHeight, dynamicCamera);
+        staticViewport = new FitViewport(Constants.Rendering.WorldWidth, Constants.Rendering.WorldHeight, staticCamera);
         box2DDebugRenderer = new Box2DDebugRenderer();
         shapeRenderer = new ShapeRenderer();
         shaderController = new ShaderController(mainController);
@@ -44,10 +46,12 @@ public class RenderController extends BaseController{
                 | GL20.GL_DEPTH_BUFFER_BIT
                 | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
         getMain().getGameWorldController().update(dt);
+        getMain().getUiController().render(dt);
     }
 
     public void resize(int width, int height) {
         Constants.Rendering.WorldHeight = Constants.Rendering.calculateHeight(width, height);
+        staticViewport.update(width, height);
         dynamicViewport.update(width, height);
     }
 
@@ -85,6 +89,31 @@ public class RenderController extends BaseController{
         return dynamicCamera;
     }
 
+    public FitViewport getStaticViewport() {
+        return staticViewport;
+    }
+
+    public OrthographicCamera getStaticCamera() {
+        return staticCamera;
+    }
+
+    public ShaderController getShaderController() {
+        return shaderController;
+    }
+
+    public ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
+    }
+
+    /**
+     * Returns Vector2 v where v.x is bottom padding and v.y is top padding as safe area
+     *
+     * @return Vector2 with safe areas
+     */
+    public Vector2 getIosSafeArea() {
+        return iosSafeArea;
+    }
+
     public FitViewport getDynamicViewport() {
         return dynamicViewport;
     }
@@ -105,7 +134,7 @@ public class RenderController extends BaseController{
     private Vector2 getIOSSafeAreaInsets() {
         if (Gdx.app.getType() == Application.ApplicationType.iOS) {
             try {
-                Class<?> IOSLauncher = Class.forName("com.samb.sb3.IOSLauncher");
+                Class<?> IOSLauncher = Class.forName("com.samb.trs.IOSLauncher");
                 return (Vector2) IOSLauncher.getDeclaredMethod("getSafeAreaInsets").invoke(null);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -118,15 +147,6 @@ public class RenderController extends BaseController{
             }
         }
         return new Vector2();
-    }
-
-    /**
-     * Returns Vector2 v where v.x is bottom padding and v.y is top padding as safe area
-     *
-     * @return Vector2 with safe areas
-     */
-    public Vector2 getIOSSafeArea() {
-        return iosSafeArea;
     }
 
     @Override

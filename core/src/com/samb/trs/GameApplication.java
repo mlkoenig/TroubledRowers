@@ -11,7 +11,7 @@ import com.samb.trs.Resources.Constants;
 public class GameApplication implements ApplicationListener {
 	private MainController mainController;
 	private GLProfiler glProfiler;
-	private float drawCalls, textureBinds, fps, shadowSwitches;
+	private float drawCalls, textureBinds, fps, shaderSwitches;
 
 	
 	@Override
@@ -33,13 +33,13 @@ public class GameApplication implements ApplicationListener {
 		drawCalls = glProfiler.getDrawCalls();
 		textureBinds = glProfiler.getTextureBindings();
 		fps = Gdx.graphics.getFramesPerSecond();
-		shadowSwitches = glProfiler.getShaderSwitches();
+		shaderSwitches = glProfiler.getShaderSwitches();
 
-		if (Constants.General.DEBUGGING)
-			System.out.println("DrawCalls: " + drawCalls +
-					"\n TextureBinds: " + textureBinds +
-					"\n ShadowSwitches: " + shadowSwitches +
-					"\n FPS: " + fps);
+//		if (Constants.General.DEBUGGING)
+//			System.out.println("DrawCalls: " + drawCalls +
+//					"\n TextureBinds: " + textureBinds +
+//					"\n ShaderSwitches: " + shaderSwitches +
+//					"\n FPS: " + fps);
 	}
 
 	@Override

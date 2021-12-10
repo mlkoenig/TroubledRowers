@@ -14,6 +14,7 @@ public class MainController implements Disposable {
     private GameServiceController gameServiceController;
     private SoundController soundController;
     private GameWorldController gameWorldController;
+    private UIController uiController;
     private MainAdapter mainAdapter;
 
     public MainController(GameApplication gameApplication) {
@@ -26,6 +27,11 @@ public class MainController implements Disposable {
         this.soundController = new SoundController(this);
         this.renderController = new RenderController(this);
         this.gameWorldController = new GameWorldController(this);
+        this.uiController = new UIController(this);
+    }
+
+    public UIController getUiController() {
+        return uiController;
     }
 
     public GameApplication getGame() {

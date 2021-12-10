@@ -27,7 +27,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
 
     public static Vector2 getSafeAreaInsets() {
         if (Foundation.getMajorSystemVersion() >= 11) {
-            UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
+            UIView view = UIApplication.getSharedApplication().getWindows().first().getRootViewController().getView();
             UIEdgeInsets edgeInsets = view.getSafeAreaInsets();
 
             double top = edgeInsets.getTop() * view.getContentScaleFactor();
