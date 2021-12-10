@@ -1,15 +1,19 @@
 package com.samb.trs.Controllers;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Shaders;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static com.samb.trs.Resources.Constants.Rendering.WorldHeight;
 import static com.samb.trs.Resources.Constants.Rendering.WorldWidth;
@@ -21,11 +25,13 @@ public class RenderController extends BaseController{
     private final OrthographicCamera dynamicCamera;
     private final ShaderController shaderController;
     private final ShapeRenderer shapeRenderer;
+    private Vector2 iosSafeArea;
     private final Box2DDebugRenderer box2DDebugRenderer;
 
     public RenderController(MainController mainController) {
         super(mainController);
         batch = new SpriteBatch(440);
+        iosSafeArea = getIOSSafeArea();
         dynamicCamera = new OrthographicCamera();
         dynamicViewport = new FitViewport(WorldWidth, Constants.Rendering.WorldHeight, dynamicCamera);
         box2DDebugRenderer = new Box2DDebugRenderer();
@@ -89,6 +95,38 @@ public class RenderController extends BaseController{
 
     public Box2DDebugRenderer getBox2DDebugRenderer() {
         return box2DDebugRenderer;
+    }
+
+    /**
+     * Returns Vector2 v where v.x is bottom padding and v.y is top padding as safe area
+     *
+     * @return Vector2 with safe areas
+     */
+    private Vector2 getIOSSafeAreaInsets() {
+        if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+            try {
+                Class<?> IOSLauncher = Class.forName("com.samb.sb3.IOSLauncher");
+                return (Vector2) IOSLauncher.getDeclaredMethod("getSafeAreaInsets").invoke(null);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        return new Vector2();
+    }
+
+    /**
+     * Returns Vector2 v where v.x is bottom padding and v.y is top padding as safe area
+     *
+     * @return Vector2 with safe areas
+     */
+    public Vector2 getIOSSafeArea() {
+        return iosSafeArea;
     }
 
     @Override
