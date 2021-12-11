@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Shaders;
@@ -27,6 +28,7 @@ public class RenderController extends BaseController{
     private final ShapeRenderer shapeRenderer;
     private final Vector2 iosSafeArea;
     private final Box2DDebugRenderer box2DDebugRenderer;
+    private final Stage stage;
 
     public RenderController(MainController mainController) {
         super(mainController);
@@ -36,6 +38,7 @@ public class RenderController extends BaseController{
         staticCamera = new OrthographicCamera();
         dynamicViewport = new FitViewport(Constants.Rendering.WorldWidth, Constants.Rendering.WorldHeight, dynamicCamera);
         staticViewport = new FitViewport(Constants.Rendering.WorldWidth, Constants.Rendering.WorldHeight, staticCamera);
+        this.stage = new Stage(staticViewport);
         box2DDebugRenderer = new Box2DDebugRenderer();
         shapeRenderer = new ShapeRenderer();
         shaderController = new ShaderController(mainController);
@@ -124,6 +127,10 @@ public class RenderController extends BaseController{
 
     public Box2DDebugRenderer getBox2DDebugRenderer() {
         return box2DDebugRenderer;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     /**

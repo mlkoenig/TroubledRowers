@@ -3,7 +3,7 @@ package com.samb.trs.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.samb.trs.UI.GameOverWindow;
+import com.samb.trs.UI.GameOver.GameOverWindow;
 
 public class UIController extends BaseController{
     private OrthographicCamera camera;
@@ -14,7 +14,7 @@ public class UIController extends BaseController{
         super(mainController);
         this.camera = getMain().getRenderController().getStaticCamera();
         this.viewport = getMain().getRenderController().getStaticViewport();
-        this.stage = new Stage(viewport);
+        this.stage = mainController.getRenderController().getStage();
         GameOverWindow uiWindowStandard = new GameOverWindow(mainController);
         uiWindowStandard.show(null);
         stage.addActor(uiWindowStandard);
@@ -28,5 +28,9 @@ public class UIController extends BaseController{
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }

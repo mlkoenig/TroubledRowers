@@ -3,7 +3,9 @@ package com.samb.trs.Resources;
 public enum BitmapFonts {
     SCORE(Fonts.CHLORINR, FontSizes.F150),
     BOLD150(Fonts.BOLD, FontSizes.F150),
-    BOLD50(Fonts.BOLD, FontSizes.F50);
+    BOLD50(Fonts.BOLD, FontSizes.F50),
+    BOLD100(Fonts.BOLD, FontSizes.F100),
+    BOLD120(Fonts.BOLD, FontSizes.F120);
 
     private final Fonts font;
     private final FontSizes fontSize;
