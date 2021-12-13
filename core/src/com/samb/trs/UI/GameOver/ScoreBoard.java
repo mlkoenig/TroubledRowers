@@ -56,4 +56,16 @@ public class ScoreBoard extends Table {
             first.setStyle(style100);
         }
     }
+
+    public Label getFirst() {
+        return first;
+    }
+
+    public Label getSecond() {
+        return second;
+    }
+
+    public Label getThird() {
+        return third;
+    }
 }

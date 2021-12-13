@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.samb.trs.Components.ParticleEffectComponent;
 import com.samb.trs.Components.TextureComponent;
 import com.samb.trs.Components.TransformComponent;
 import com.samb.trs.Controllers.MainController;
@@ -20,7 +21,7 @@ import java.util.Comparator;
 public class RenderingSystem extends SortedIteratingSystem {
 
     private MainController mainController;
-    private Array<Entity> renderQueue;
+    private Array<Entity> renderQueue, particleQueue;
     private Comparator<Entity> comparator;
     private OrthographicCamera camera;
     private FitViewport viewport;
@@ -29,13 +30,14 @@ public class RenderingSystem extends SortedIteratingSystem {
     @SuppressWarnings("unchecked")
     public RenderingSystem(MainController mainController) {
 
-        super(Family.all(TransformComponent.class).one(TextureComponent.class).get(), new ZComparator());
+        super(Family.one(TextureComponent.class, ParticleEffectComponent.class).get(), new ZComparator());
 
         this.mainController = mainController;
 
         comparator = new ZComparator();
 
         renderQueue = new Array<>();
+        particleQueue = new Array<>();
 
         camera = mainController.getRenderController().getDynamicCamera();
         viewport = mainController.getRenderController().getDynamicViewport();
@@ -59,6 +61,8 @@ public class RenderingSystem extends SortedIteratingSystem {
         drawEntity(Mappers.texture.get(renderQueue.first()), Mappers.transform.get(renderQueue.first()));
         renderQueue.removeIndex(0);
 
+        // Draw shadows
+
         batch.enableBlending();
 
         batch.setShader(mainController.getRenderController().getShader(Shaders.SHADOW));
@@ -77,6 +81,18 @@ public class RenderingSystem extends SortedIteratingSystem {
         }
 
         batch.setShader(null);
+
+        // Draw particle effects
+
+        for (Entity entity : particleQueue) {
+            ParticleEffectComponent pec = Mappers.peCom.get(entity);
+            if (!pec.particleEffect.isComplete() && pec.timeTilDeath > 0)
+                pec.particleEffect.draw(batch, deltaTime);
+        }
+
+        particleQueue.clear();
+
+        // Draw sprites
 
         for (Entity entity : renderQueue) {
             if (Mappers.texture.has(entity)) {
@@ -97,24 +113,27 @@ public class RenderingSystem extends SortedIteratingSystem {
     }
 
     private void drawEntity(TextureComponent textureComponent, TransformComponent transformComponent) {
-        float width = textureComponent.width;
-        float height = textureComponent.height;
+        if (!transformComponent.isHidden) {
+            float width = textureComponent.width;
+            float height = textureComponent.height;
 
-        float originX = width / 2f;
-        float originY = height / 2f;
+            float originX = width / 2f;
+            float originY = height / 2f;
 
-        batch.draw(textureComponent.textureRegion,
-                transformComponent.position.x - originX,
-                transformComponent.position.y - originY,
-                originX, originY,
-                width, height,
-                1, 1,
-                transformComponent.rotation);
+            batch.draw(textureComponent.textureRegion,
+                    transformComponent.position.x - originX,
+                    transformComponent.position.y - originY,
+                    originX, originY,
+                    width, height,
+                    1, 1,
+                    transformComponent.rotation);
+        }
     }
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        renderQueue.add(entity);
+        if (Mappers.texture.has(entity) && Mappers.transform.has(entity)) renderQueue.add(entity);
+        else if (Mappers.peCom.has(entity)) particleQueue.add(entity);
     }
 
 }

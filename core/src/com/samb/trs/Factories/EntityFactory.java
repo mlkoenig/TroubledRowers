@@ -2,6 +2,7 @@ package com.samb.trs.Factories;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,13 +13,16 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.samb.trs.Components.*;
 import com.samb.trs.Controllers.MainController;
+import com.samb.trs.Controllers.ParticleEffectController;
 import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Particles;
 import com.samb.trs.Resources.TextureRegions;
+import com.samb.trs.Systems.CheckOutsideSystem;
 import com.samb.trs.Utilities.Mappers;
 
 import static com.samb.trs.Resources.Constants.Rendering.WorldHeight;
@@ -41,6 +45,16 @@ public class EntityFactory {
         if (entityFactory == null)
             entityFactory = new EntityFactory(mainController, engine, world);
         return entityFactory;
+    }
+
+    public static EntityFactory getInstance() {
+        if (entityFactory == null){
+            Gdx.app.error("FactoryError", "Instance not initialized yet");
+            throw new GdxRuntimeException("InternalÉrror");
+        }
+
+        return entityFactory;
+
     }
 
     // METHODS FOR CREATING INGAME ENTITIES
@@ -81,7 +95,9 @@ public class EntityFactory {
         makeShieldComponent(player);
         makeRowingComponent(player);
         makeSteeringEntity(player);
-        entityFactory.makeParticleEffect(Particles.WATER, player, 0, 0, 0);
+
+        Mappers.transform.get(player).isHidden = true;
+
         return player.add(engine.createComponent(DeathComponent.class))
                 .add(engine.createComponent(CollisionComponent.class))
                 .add(engine.createComponent(PlayerComponent.class));
@@ -112,6 +128,9 @@ public class EntityFactory {
     public Entity makeFishEntity(float x, float y, Viewport viewport) {
         Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH, x, y, 1, 200, 160);
         makeSteeringEntity(fish, null, SteeringComponent.SteeringState.NONE, -MathUtils.PI / 2f);
+
+        engine.addEntity(makeParticleEffect(Particles.FISH_WATER, fish));
+
         return makeCheckOutsideEntity(fish, viewport).add(engine.createComponent(CollisionComponent.class)).add(engine.createComponent(DeathComponent.class));
     }
 
@@ -234,6 +253,20 @@ public class EntityFactory {
         return entity;
     }
 
+    public Entity makeParticleEffect(Particles p, Entity attached) {
+        Entity entity = engine.createEntity();
+        ParticleEffectComponent pec = engine.createComponent(ParticleEffectComponent.class);
+        pec.particleEffect = mainController.getAssetController().getParticleEffectController().getPooledParticleEffect(p);
+
+        AttachedComponent ac = engine.createComponent(AttachedComponent.class);
+        ac.attachedTo = attached;
+        ac.isAttached = true;
+
+        TransformComponent tc = engine.createComponent(TransformComponent.class);
+
+        return entity.add(pec).add(ac).add(tc);
+    }
+
     public Entity makeMovableEntity(Entity entity, Body bodyA, float maxForce, float frequencyHz) {
         if (Mappers.body.has(entity)) {
             BodyComponent bc = Mappers.body.get(entity);
@@ -245,26 +278,6 @@ public class EntityFactory {
         }
 
         return entity;
-    }
-
-    public Entity makeParticleEffect(Particles p, Entity attachedEntity, float xo, float yo, float z) {
-        Entity entPE = engine.createEntity();
-
-        TransformComponent tc = engine.createComponent(TransformComponent.class);
-        tc.z = z;
-
-        engine.addEntity(entPE);
-        return entPE;
-    }
-
-    public Entity makeParticleEffect(Particles p, Entity attachedEntity, float xo, float yo, float z, float width, float height) {
-        Entity entPE = engine.createEntity();
-
-        TransformComponent tc = engine.createComponent(TransformComponent.class);
-        tc.z = z;
-
-        engine.addEntity(entPE);
-        return entPE;
     }
 
     public Entity makeCheckOutsideEntity(Entity entity, Viewport viewport) {
@@ -297,6 +310,10 @@ public class EntityFactory {
 
             sc.shieldEntity.add(ac1);
             sc.gridEntity.add(ac2);
+
+            Mappers.transform.get(sc.shieldEntity).isHidden = true;
+            Mappers.transform.get(sc.gridEntity).isHidden = true;
+
 
             engine.addEntity(sc.shieldEntity);
             engine.addEntity(sc.gridEntity);
@@ -359,6 +376,9 @@ public class EntityFactory {
         rc.paddle = makeBodyEntity(TypeComponent.PADDEL, TextureRegions.KANU_PADDEL, bc.body.getPosition().x * Constants.Rendering.PPM, bc.body.getPosition().y * Constants.Rendering.PPM, 3, 225, 23);
         rc.man = makeSprite(TextureRegions.KANU_MANN, bc.body.getPosition().x, bc.body.getPosition().y, 2, 41, 73, true);
         rc.frequency = 1f;
+
+        Mappers.transform.get(rc.paddle).isHidden = true;
+        Mappers.transform.get(rc.man).isHidden = true;
 
         AttachedComponent ac1 = engine.createComponent(AttachedComponent.class);
         AttachedComponent ac2 = engine.createComponent(AttachedComponent.class);

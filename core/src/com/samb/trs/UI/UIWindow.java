@@ -1,6 +1,7 @@
 package com.samb.trs.UI;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -30,19 +31,17 @@ public abstract class UIWindow extends Table {
 
     public void show(Runnable onShowRunnable) {
         if (isHidden) {
-            if (onShowRunnable != null)
-                onShowRunnable.run();
-            onShow();
+            onShow(onShowRunnable);
             isHidden = false;
+            setTouchable(Touchable.enabled);
         }
     }
 
     public void hide(Runnable onHideRunnable) {
         if (!isHidden) {
-            onHide();
-            if (onHideRunnable != null)
-                onHideRunnable.run();
+            onHide(onHideRunnable);
             isHidden = true;
+            setTouchable(Touchable.disabled);
         }
     }
 
@@ -56,9 +55,9 @@ public abstract class UIWindow extends Table {
 
     protected abstract void resetWindow();
 
-    protected abstract void onShow();
+    protected abstract void onShow(Runnable runnable);
 
-    protected abstract void onHide();
+    protected abstract void onHide(Runnable runnable);
 
     public boolean isHidden() {
         return isHidden;

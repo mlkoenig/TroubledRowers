@@ -2,6 +2,7 @@ package com.samb.trs.Controllers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -22,17 +23,23 @@ public class AssetController extends BaseController {
     private BodyEditorLoader bodyEditorLoader;
     private HashMap<BitmapFonts, BitmapFont> bitmapFonts;
     private Skin skin;
+    private ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;
+    private ParticleEffectController particleEffectController;
 
     public AssetController(MainController mainController) {
         super(mainController);
         this.assetManager = new AssetManager();
         this.bodyEditorLoader = new BodyEditorLoader(Gdx.files.internal("Box2d/box2d.json"));
         this.bitmapFonts = new HashMap<>();
+        this.particleEffectParameter = new ParticleEffectLoader.ParticleEffectParameter();
+        this.particleEffectController = new ParticleEffectController(mainController);
 
         initSkin();
         loadAssets();
 
         assetManager.finishLoading();
+
+        initParticleEffectPools();
     }
 
     private void loadAssets(){
@@ -58,6 +65,16 @@ public class AssetController extends BaseController {
 
         for(BitmapFonts bmf : BitmapFonts.values()){
             bitmapFonts.put(bmf, getAsset(bmf));
+        }
+
+        for (Particles p : Particles.values()) {
+            loadAsset(p);
+        }
+    }
+
+    public void initParticleEffectPools() {
+        for (Particles p : Particles.values()) {
+            particleEffectController.addParticleEffect(p, getAsset(p), 1.0f);
         }
     }
 
@@ -136,6 +153,11 @@ public class AssetController extends BaseController {
         assetManager.load(resource.getIdentifier(), resource.getType());
     }
 
+    private void loadAsset(Particles p) {
+        particleEffectParameter.atlasFile = p.getAtlas().getIdentifier();
+        assetManager.load(p.getIdentifier(), p.getType(), particleEffectParameter);
+    }
+
     public <T> T getAsset(Resource<T> resource) {
         return assetManager.get(resource.getIdentifier(), resource.getType());
     }
@@ -145,6 +167,10 @@ public class AssetController extends BaseController {
             return skin.getFont(bmf.getFont().getName(bmf.getFontSize()));
 
         return bitmapFonts.get(bmf);
+    }
+
+    public Skin getSkin() {
+        return skin;
     }
 
     public Label.LabelStyle getAsset(BitmapFonts bmf, Color labelColor){
@@ -161,6 +187,10 @@ public class AssetController extends BaseController {
 
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+
+    public ParticleEffectController getParticleEffectController() {
+        return particleEffectController;
     }
 
     @Override

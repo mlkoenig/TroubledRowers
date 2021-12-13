@@ -7,7 +7,7 @@ public class Constants {
 
     // GENERAL CONSTANTS
     public static class General {
-        public static final boolean DEBUGGING = true;
+        public static final boolean DEBUGGING = false;
     }
 
     public static class Camera {

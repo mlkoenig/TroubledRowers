@@ -200,10 +200,6 @@ public class SpawnSystem extends EntitySystem implements Disposable {
 
         Entity coin = entityFactory.makeCoinEntity(x, y, viewport);
         engine.addEntity(coin);
-
-        TextureComponent tc = Mappers.texture.get(coin);
-
-        Entity particle = entityFactory.makeParticleEffect(Particles.ROCK_WATER, coin, 0, 0, 0, tc.width - 10, tc.height - 10);
     }
 
     private void spawnBoostInQuadrant(Entity q) {

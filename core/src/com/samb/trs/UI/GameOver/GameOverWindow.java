@@ -35,9 +35,9 @@ public class GameOverWindow extends UIWindowStandard {
     }
 
     private void initScoreTable(){
-        this.scoreLabel = new Label("", bold150Style);
+        this.scoreLabel = new Label("0", bold150Style);
         this.scoreLabel.setAlignment(Align.center);
-        this.highScoreLabel = new Label("", bold50Style);
+        this.highScoreLabel = new Label("Best: 0", bold50Style);
         this.highScoreLabel.setAlignment(Align.center);
 
         this.scoreTable = new Table();
@@ -54,10 +54,33 @@ public class GameOverWindow extends UIWindowStandard {
 
     private void addActors(){
         add(scoreTable).row();
-        add(separator).width(Constants.Rendering.WorldWidth * 0.9f - stage.getWidth()*0.25f).padTop(stage.getHeight()*0.01f).row();
-        add(scoreBoard).padLeft(RenderController.p2w(5)).padRight(RenderController.p2w(5)).row();
-        add(buttonTable).padTop(RenderController.p2h(2));
+        add(separator).width(Constants.Rendering.WorldWidth * 0.9f - stage.getWidth()*0.25f)
+                .padTop(RenderController.p2h(2.5f))
+                .row();
+        add(scoreBoard).padLeft(RenderController.p2w(5))
+                .padRight(RenderController.p2w(5))
+                .padTop(RenderController.p2h(2.5f))
+                .row();
+        add(buttonTable).padTop(RenderController.p2h(5));
     }
 
+    public Label getScoreLabel() {
+        return scoreLabel;
+    }
 
+    public Label getHighScoreLabel() {
+        return highScoreLabel;
+    }
+
+    public ScoreBoard getScoreBoard() {
+        return scoreBoard;
+    }
+
+    public Separator getSeparator() {
+        return separator;
+    }
+
+    public ButtonTable getButtonTable() {
+        return buttonTable;
+    }
 }

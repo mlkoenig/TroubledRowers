@@ -20,4 +20,5 @@ public class Mappers {
     public static ComponentMapper<QuadrantComponent> quadrant = ComponentMapper.getFor(QuadrantComponent.class);
     public static ComponentMapper<SteeringComponent> steering = ComponentMapper.getFor(SteeringComponent.class);
     public static ComponentMapper<FollowComponent> follow = ComponentMapper.getFor(FollowComponent.class);
+    public static ComponentMapper<ParticleEffectComponent> peCom = ComponentMapper.getFor(ParticleEffectComponent.class);
 }

@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.utils.Array;
 import com.samb.trs.Components.CollectComponent;
+import com.samb.trs.Factories.EntityFactory;
+import com.samb.trs.Resources.Particles;
 import com.samb.trs.Utilities.Mappers;
 
 public class CollectSystem extends IteratingSystem {

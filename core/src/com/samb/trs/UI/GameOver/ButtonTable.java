@@ -1,6 +1,5 @@
 package com.samb.trs.UI.GameOver;
 
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -17,8 +16,15 @@ public class ButtonTable extends Table {
         this.restartButton = new ImageButton(drawable, drawable);
         this.menuButton = new ImageButton(drawable2, drawable2);
 
-        add(restartButton).padRight(25).size(200, 200);
-        add(menuButton).padLeft(25).size(200, 200);
-        setTouchable(Touchable.disabled);
+        add(restartButton).padRight(50).size(200, 200);
+        add(menuButton).padLeft(50).size(200, 200);
+    }
+
+    public ImageButton getRestartButton() {
+        return restartButton;
+    }
+
+    public ImageButton getMenuButton() {
+        return menuButton;
     }
 }

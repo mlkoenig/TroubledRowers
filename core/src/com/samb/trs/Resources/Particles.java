@@ -1,8 +1,9 @@
 package com.samb.trs.Resources;
 
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-public enum Particles {
+public enum Particles implements Resource<ParticleEffect> {
     BOOST("Particles/boost.p", Atlases.TEXTURES), COIN("Particles/coin.p", Atlases.TEXTURES), FISH("Particles/fish.p", Atlases.TEXTURES), ROCK("Particles/rock.p", Atlases.TEXTURES),
     STAGE("Particles/stage.p", Atlases.TEXTURES), TAIL("Particles/tail.p", Atlases.TEXTURES), WATER("Particles/water.p", Atlases.TEXTURES),
     ROCK_WATER("Particles/rock_water.p", Atlases.TEXTURES), FISH_WATER("Particles/fish_water.p", Atlases.TEXTURES);
@@ -25,5 +26,10 @@ public enum Particles {
 
     public Atlases getAtlas() {
         return atlas;
+    }
+
+    @Override
+    public Class<ParticleEffect> getType() {
+        return ParticleEffect.class;
     }
 }

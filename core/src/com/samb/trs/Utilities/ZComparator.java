@@ -24,6 +24,9 @@ public class ZComparator implements Comparator<Entity> {
             return Mappers.transform.get(entity).z;
         }
 
+        if (Mappers.peCom.has(entity))
+            return -1;
+
         throw new IllegalArgumentException("Entity must have component TransformComponent or ParticleEffectComponent!");
     }
 }

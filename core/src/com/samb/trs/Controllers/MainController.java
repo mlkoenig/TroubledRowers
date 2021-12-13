@@ -16,6 +16,7 @@ public class MainController implements Disposable {
     private GameWorldController gameWorldController;
     private UIController uiController;
     private MainAdapter mainAdapter;
+    private InputController inputController;
 
     public MainController(GameApplication gameApplication) {
         Box2D.init();
@@ -28,6 +29,9 @@ public class MainController implements Disposable {
         this.renderController = new RenderController(this);
         this.gameWorldController = new GameWorldController(this);
         this.uiController = new UIController(this);
+        this.inputController = new InputController(this);
+
+        inputController.setInputControllers();
     }
 
     public UIController getUiController() {
@@ -64,6 +68,10 @@ public class MainController implements Disposable {
 
     public SaveController getSaveController() {
         return saveController;
+    }
+
+    public InputController getInputController() {
+        return inputController;
     }
 
     @Override

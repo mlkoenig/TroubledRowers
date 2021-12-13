@@ -37,12 +37,12 @@ public class EngineController extends BaseController implements Updatable {
         engine.addSystem(new CollisionSystem(mainController, score));
         engine.addSystem(new CollectSystem());
         engine.addSystem(new DeathSystem());
+        engine.addSystem(new ParticleEffectSystem());
         engine.addSystem(new RenderingSystem(mainController));
         engine.addSystem(new PhysicsDebugSystem(mainController, world));
 
-        gameLogicSystem = new GameLogicSystem();
+        gameLogicSystem = new GameLogicSystem(mainController);
         engine.addSystem(gameLogicSystem);
-        gameLogicSystem.setGameState(GameLogicSystem.GameState.LOADING);
     }
 
     @Override
