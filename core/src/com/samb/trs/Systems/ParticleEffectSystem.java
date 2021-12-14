@@ -25,11 +25,13 @@ public class ParticleEffectSystem extends IteratingSystem {
 
         // Move PE if attached
         if (ac.isAttached && ac.attachedTo != null) {
-            TransformComponent tca = Mappers.transform.get(ac.attachedTo);
-            pec.particleEffect.setPosition(
-                    tca.position.x + ac.offset.x,
-                    tca.position.y + ac.offset.y
-            );
+            if (Mappers.transform.has(ac.attachedTo)) {
+                TransformComponent tca = Mappers.transform.get(ac.attachedTo);
+                pec.particleEffect.setPosition(
+                        tca.position.x + ac.offset.x,
+                        tca.position.y + ac.offset.y
+                );
+            }
         }
 
         // free PE if completed

@@ -254,13 +254,18 @@ public class EntityFactory {
     }
 
     public Entity makeParticleEffect(Particles p, Entity attached) {
+        return makeParticleEffect(p, attached, 0, 0);
+    }
+
+    public Entity makeParticleEffect(Particles p, Entity attached, float xo, float yo) {
         Entity entity = engine.createEntity();
         ParticleEffectComponent pec = engine.createComponent(ParticleEffectComponent.class);
         pec.particleEffect = mainController.getAssetController().getParticleEffectController().getPooledParticleEffect(p);
 
         AttachedComponent ac = engine.createComponent(AttachedComponent.class);
         ac.attachedTo = attached;
-        ac.isAttached = true;
+        ac.offset.x = xo;
+        ac.offset.y = yo;
 
         TransformComponent tc = engine.createComponent(TransformComponent.class);
 
@@ -301,12 +306,10 @@ public class EntityFactory {
             AttachedComponent ac2 = engine.createComponent(AttachedComponent.class);
 
             ac1.attachedTo = entity;
-            ac1.isAttached = false;
 
             makeMovableEntity(sc.shieldEntity, 10000.0f * Mappers.body.get(sc.shieldEntity).body.getMass(), frequencyHz);
 
             ac2.attachedTo = entity;
-            ac2.isAttached = true;
 
             sc.shieldEntity.add(ac1);
             sc.gridEntity.add(ac2);
@@ -384,14 +387,12 @@ public class EntityFactory {
         AttachedComponent ac2 = engine.createComponent(AttachedComponent.class);
 
         ac1.attachedTo = entity;
-        ac1.isAttached = false;
 
         makeMovableEntity(rc.paddle, 10000.0f * Mappers.body.get(rc.paddle).body.getMass(), frequencyHz);
         Mappers.mouse.get(rc.paddle).offset.set(0, -RenderController.cph() * 5 * Constants.Rendering.PPM_INV);
 
         ac2.attachedTo = entity;
         ac2.offset.set(0, -RenderController.cph() * 10);
-        ac2.isAttached = true;
 
         rc.paddle.add(ac1);
         rc.man.add(ac2);

@@ -12,13 +12,13 @@ public class AttachedComponent implements Component, Pool.Poolable {
 
     public AttachedComponent() {
         offset = new Vector2();
-        isAttached = true;
+        isAttached = false;
     }
 
     @Override
     public void reset() {
         attachedTo = null;
         offset.setZero();
-        isAttached = true;
+        isAttached = false;
     }
 }

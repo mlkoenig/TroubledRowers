@@ -22,12 +22,15 @@ public class GameWorldController extends BaseController implements Updatable {
     private GameLogicSystem gameLogicSystem;
     private Score score;
     private EventInputProcessor eventInputProcessor;
+    private AttachedController attachedController;
 
     public GameWorldController(MainController mainController) {
         super(mainController);
         this.engineController = new EngineController(mainController);
         this.world = engineController.getWorld();
         this.engine = engineController.getEngine();
+        this.attachedController = new AttachedController(mainController);
+        this.engine.addEntityListener(attachedController);
         this.gameLogicSystem = engineController.getGameLogicSystem();
         this.score = engineController.getScore();
         this.eventInputProcessor = engineController.getEventInputProcessor();
@@ -43,6 +46,9 @@ public class GameWorldController extends BaseController implements Updatable {
         engine.removeAllEntities();
         score.reset();
         getMain().getRenderController().getDynamicCamera().position.set(0, 0, 0);
+
+        attachedController.reset();
+
         EntityFactory entityFactory = EntityFactory.getInstance(getMain(), engine, world);
 
         Entity cameraEntity = entityFactory.makeCameraEntity(getMain().getRenderController().getDynamicCamera());

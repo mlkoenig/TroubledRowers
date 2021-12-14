@@ -1,6 +1,7 @@
 package com.samb.trs.Systems;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.utils.Array;
 import com.samb.trs.Components.AttachedComponent;
 import com.samb.trs.Components.BodyComponent;
 import com.samb.trs.Components.TransformComponent;
+import com.samb.trs.Controllers.AttachedController;
+import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Utilities.Mappers;
 
