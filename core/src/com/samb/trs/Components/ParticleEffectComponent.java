@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Pool;
 
 public class ParticleEffectComponent implements Component, Pool.Poolable {
     public ParticleEffectPool.PooledEffect particleEffect;
-    public float timeTilDeath = 0.5f; // add a 1 second delay
+    public float timeTilDeath = 5f; // add a 1 second delay
     public boolean isDead = false;
 
     @Override
@@ -15,6 +15,6 @@ public class ParticleEffectComponent implements Component, Pool.Poolable {
         particleEffect.free(); // free the pooled effect
         particleEffect = null; // empty this component's particle effect
         isDead = false;
-        timeTilDeath = 0.5f;
+        timeTilDeath = 5f;
     }
 }

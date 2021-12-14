@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -17,16 +18,13 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.samb.trs.Components.*;
 import com.samb.trs.Controllers.MainController;
-import com.samb.trs.Controllers.ParticleEffectController;
 import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Particles;
 import com.samb.trs.Resources.TextureRegions;
-import com.samb.trs.Systems.CheckOutsideSystem;
 import com.samb.trs.Utilities.Mappers;
 
-import static com.samb.trs.Resources.Constants.Rendering.WorldHeight;
-import static com.samb.trs.Resources.Constants.Rendering.WorldWidth;
+import static com.samb.trs.Resources.Constants.Rendering.*;
 
 public class EntityFactory {
     private static final float frequencyHz = 15f;
@@ -97,6 +95,7 @@ public class EntityFactory {
         makeSteeringEntity(player);
 
         Mappers.transform.get(player).isHidden = true;
+        entityFactory.makeAttachedParticleEffect(Particles.WATER, player, 0, 0, 0, -1, -1, 0);
 
         return player.add(engine.createComponent(DeathComponent.class))
                 .add(engine.createComponent(CollisionComponent.class))
@@ -128,9 +127,6 @@ public class EntityFactory {
     public Entity makeFishEntity(float x, float y, Viewport viewport) {
         Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH, x, y, 1, 200, 160);
         makeSteeringEntity(fish, null, SteeringComponent.SteeringState.NONE, -MathUtils.PI / 2f);
-
-        engine.addEntity(makeParticleEffect(Particles.FISH_WATER, fish));
-
         return makeCheckOutsideEntity(fish, viewport).add(engine.createComponent(CollisionComponent.class)).add(engine.createComponent(DeathComponent.class));
     }
 
@@ -253,23 +249,57 @@ public class EntityFactory {
         return entity;
     }
 
-    public Entity makeParticleEffect(Particles p, Entity attached) {
-        return makeParticleEffect(p, attached, 0, 0);
+    public Entity makeAttachedParticleEffect(Particles p, Entity attached) {
+        return makeAttachedParticleEffect(p, attached, 0, 0);
     }
 
-    public Entity makeParticleEffect(Particles p, Entity attached, float xo, float yo) {
+    public Entity makeAttachedParticleEffect(Particles p, Entity attached, float xo, float yo) {
+        return makeAttachedParticleEffect(p, attached, xo, yo, 4, 0.5f);
+    }
+
+    public Entity makeAttachedParticleEffect(Particles p, Entity attached, float xo, float yo, float z, float timeTilDeath) {
+        return makeAttachedParticleEffect(p, attached, xo, yo, z, -1, -1, timeTilDeath);
+    }
+
+    public Entity makeAttachedParticleEffect(Particles p, Entity attached, float xo, float yo, float z, float width, float height, float timeTilDeath) {
         Entity entity = engine.createEntity();
         ParticleEffectComponent pec = engine.createComponent(ParticleEffectComponent.class);
         pec.particleEffect = mainController.getAssetController().getParticleEffectController().getPooledParticleEffect(p);
+        pec.timeTilDeath = timeTilDeath;
 
         AttachedComponent ac = engine.createComponent(AttachedComponent.class);
         ac.attachedTo = attached;
-        ac.offset.x = xo;
-        ac.offset.y = yo;
+        ac.offset.x = xo * PPM;
+        ac.offset.y = yo * PPM;
+
+        TransformComponent tc = engine.createComponent(TransformComponent.class);
+        tc.z = z;
+
+        if (width > 0 && height > 0) {
+            for (ParticleEmitter emitter : pec.particleEffect.getEmitters()) {
+                emitter.getSpawnWidth().setLow(width);
+                emitter.getSpawnWidth().setHigh(width);
+                emitter.getSpawnHeight().setLow(height);
+                emitter.getSpawnHeight().setHigh(height);
+            }
+        }
+
+        pec.particleEffect.start();
+
+        engine.addEntity(entity.add(pec).add(ac).add(tc));
+        return entity;
+    }
+
+    public Entity makeParticleEffect(Particles p, float x, float y) {
+        Entity entity = engine.createEntity();
+        ParticleEffectComponent pec = engine.createComponent(ParticleEffectComponent.class);
+        pec.particleEffect = mainController.getAssetController().getParticleEffectController().getPooledParticleEffect(p);
+        pec.particleEffect.setPosition(x, y);
 
         TransformComponent tc = engine.createComponent(TransformComponent.class);
 
-        return entity.add(pec).add(ac).add(tc);
+        engine.addEntity(entity.add(pec).add(tc));
+        return entity;
     }
 
     public Entity makeMovableEntity(Entity entity, Body bodyA, float maxForce, float frequencyHz) {
@@ -377,7 +407,7 @@ public class EntityFactory {
         RowingComponent rc = engine.createComponent(RowingComponent.class);
         BodyComponent bc = Mappers.body.get(entity);
         rc.paddle = makeBodyEntity(TypeComponent.PADDEL, TextureRegions.KANU_PADDEL, bc.body.getPosition().x * Constants.Rendering.PPM, bc.body.getPosition().y * Constants.Rendering.PPM, 3, 225, 23);
-        rc.man = makeSprite(TextureRegions.KANU_MANN, bc.body.getPosition().x, bc.body.getPosition().y, 2, 41, 73, true);
+        rc.man = makeSprite(TextureRegions.KANU_MANN, bc.body.getPosition().x* PPM, bc.body.getPosition().y * PPM, 2, 41, 73, true);
         rc.frequency = 1f;
 
         Mappers.transform.get(rc.paddle).isHidden = true;
@@ -389,7 +419,7 @@ public class EntityFactory {
         ac1.attachedTo = entity;
 
         makeMovableEntity(rc.paddle, 10000.0f * Mappers.body.get(rc.paddle).body.getMass(), frequencyHz);
-        Mappers.mouse.get(rc.paddle).offset.set(0, -RenderController.cph() * 5 * Constants.Rendering.PPM_INV);
+        Mappers.mouse.get(rc.paddle).offset.set(0, -RenderController.cph() * 5 * PPM_INV);
 
         ac2.attachedTo = entity;
         ac2.offset.set(0, -RenderController.cph() * 10);

@@ -21,7 +21,7 @@ import java.util.Comparator;
 public class RenderingSystem extends SortedIteratingSystem {
 
     private MainController mainController;
-    private Array<Entity> renderQueue, particleQueue;
+    private Array<Entity> renderQueue;
     private Comparator<Entity> comparator;
     private OrthographicCamera camera;
     private FitViewport viewport;
@@ -37,7 +37,6 @@ public class RenderingSystem extends SortedIteratingSystem {
         comparator = new ZComparator();
 
         renderQueue = new Array<>();
-        particleQueue = new Array<>();
 
         camera = mainController.getRenderController().getDynamicCamera();
         viewport = mainController.getRenderController().getDynamicViewport();
@@ -82,16 +81,6 @@ public class RenderingSystem extends SortedIteratingSystem {
 
         batch.setShader(null);
 
-        // Draw particle effects
-
-        for (Entity entity : particleQueue) {
-            ParticleEffectComponent pec = Mappers.peCom.get(entity);
-            if (!pec.particleEffect.isComplete() && pec.timeTilDeath > 0)
-                pec.particleEffect.draw(batch, deltaTime);
-        }
-
-        particleQueue.clear();
-
         // Draw sprites
 
         for (Entity entity : renderQueue) {
@@ -104,6 +93,10 @@ public class RenderingSystem extends SortedIteratingSystem {
                 }
 
                 drawEntity(textureComponent, transformComponent);
+            } else if(Mappers.peCom.has(entity)) {
+                ParticleEffectComponent pec = Mappers.peCom.get(entity);
+                if (!pec.particleEffect.isComplete() && pec.timeTilDeath >= 0)
+                    pec.particleEffect.draw(batch, deltaTime);
             }
 
         }
@@ -132,8 +125,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        if (Mappers.texture.has(entity) && Mappers.transform.has(entity)) renderQueue.add(entity);
-        else if (Mappers.peCom.has(entity)) particleQueue.add(entity);
+        renderQueue.add(entity);
     }
 
 }

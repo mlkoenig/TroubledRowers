@@ -8,15 +8,23 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.samb.trs.Components.CollisionComponent;
 import com.samb.trs.Components.TextureComponent;
+import com.samb.trs.Components.TransformComponent;
 import com.samb.trs.Components.TypeComponent;
 import com.samb.trs.Controllers.MainController;
+import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Factories.EntityFactory;
 import com.samb.trs.Model.Score;
+import com.samb.trs.Resources.Constants;
+import com.samb.trs.Resources.Particles;
 import com.samb.trs.Resources.Sounds;
 import com.samb.trs.Utilities.Mappers;
 
+import javax.swing.*;
+
 import static com.samb.trs.Components.TypeComponent.*;
 import static com.samb.trs.Factories.EntityFactory.compare;
+import static com.samb.trs.Resources.Constants.Rendering.PPM;
+import static com.samb.trs.Resources.Constants.Rendering.PPM_INV;
 import static com.samb.trs.Resources.Constants.Collision.BOOST_PROBABILITY;
 
 public class CollisionSystem extends IteratingSystem {
@@ -67,26 +75,29 @@ public class CollisionSystem extends IteratingSystem {
                         body1 = Mappers.body.get(entity).body;
                         body2 = Mappers.body.get(collidedEntity).body;
 
+                        entityFactory.makeAttachedParticleEffect(Particles.ROCK, first,
+                                contactPoint.x - body1.getPosition().x,
+                                contactPoint.y - body1.getPosition().y
+                        );
+                        entityFactory.makeAttachedParticleEffect(Particles.ROCK, second,
+                                contactPoint.x - body2.getPosition().x,
+                                contactPoint.y - body2.getPosition().y
+                        );
+
                         float c = compare(first, second);
 
-                        if (c > 0) {
-                            TextureComponent tex = Mappers.texture.get(second);
+                        Entity target = c > 0 ? second : first;
+
+                        TextureComponent tex = Mappers.texture.get(target);
+                        entityFactory.resize(target, tex.width * 0.8f, tex.height * 0.8f);
+                        if (tex.width < 110) {
+                            removeEntityAndSpawnCollectEntity(entityFactory, target);
+                        }
+
+                        if (c == 0) {
+                            tex = Mappers.texture.get(second);
                             entityFactory.resize(second, tex.width * 0.8f, tex.height * 0.8f);
                             if (tex.width < 110) {
-                                removeEntityAndSpawnCollectEntity(entityFactory, second);
-                            }
-                        } else if (c < 0) {
-                            TextureComponent tex = Mappers.texture.get(first);
-                            entityFactory.resize(first, tex.width * 0.8f, tex.height * 0.8f);
-                            if (tex.width < 110) {
-                                removeEntityAndSpawnCollectEntity(entityFactory, first);
-                            }
-                        } else {
-                            TextureComponent tex = Mappers.texture.get(first);
-                            entityFactory.resize(first, tex.width * 0.8f, tex.height * 0.8f);
-                            entityFactory.resize(second, tex.width, tex.height);
-                            if (tex.width < 110) {
-                                removeEntityAndSpawnCollectEntity(entityFactory, first);
                                 removeEntityAndSpawnCollectEntity(entityFactory, second);
                             }
                         }
@@ -97,23 +108,56 @@ public class CollisionSystem extends IteratingSystem {
                     case ROCK | TRUNK:
                     case ROCK | SHORE:
                         first = tc.type == ROCK ? entity : collidedEntity;
+                        second = tc.type == ROCK ? collidedEntity : entity;
                         mainController.getSoundController().queueSound(first, Sounds.ROCK);
+
+                        body1 = Mappers.body.get(first).body;
+                        body2 = Mappers.body.get(second).body;
+
+                        entityFactory.makeAttachedParticleEffect(Particles.ROCK, first,
+                                contactPoint.x - body1.getPosition().x,
+                                contactPoint.y - body1.getPosition().y);
+                        entityFactory.makeAttachedParticleEffect(Particles.STAGE, second,
+                                contactPoint.x - body2.getPosition().x,
+                                contactPoint.y - body2.getPosition().y);
                         break;
                     case TRUNK | COIN:
                     case TRUNK | BOOST:
                         first = tc.type == TRUNK ? entity : collidedEntity;
                         second = tc.type == TRUNK ? collidedEntity : entity;
 
+                        body1 = Mappers.body.get(first).body;
+
+                        entityFactory.makeAttachedParticleEffect(Particles.STAGE, first,
+                                contactPoint.x - body1.getPosition().x,
+                                contactPoint.y - body1.getPosition().y);
+
                         mainController.getSoundController().queueSound(second, Sounds.COIN_DROP);
                         break;
                     case SHORE | COIN:
                     case SHORE | BOOST:
+                        first = tc.type == SHORE ? entity : collidedEntity;
                         second = tc.type == SHORE ? collidedEntity : entity;
+
+                        body1 = Mappers.body.get(first).body;
+
+                        entityFactory.makeAttachedParticleEffect(Particles.STAGE, first,
+                                contactPoint.x - body1.getPosition().x,
+                                contactPoint.y - body1.getPosition().y);
+
                         mainController.getSoundController().queueSound(second, Sounds.COIN_DROP);
                         break;
                     case ROCK | COIN:
                     case ROCK | BOOST:
+                        first = tc.type == ROCK ? entity : collidedEntity;
                         second = tc.type == ROCK ? collidedEntity : entity;
+
+                        body1 = Mappers.body.get(first).body;
+
+                        entityFactory.makeAttachedParticleEffect(Particles.ROCK, first,
+                                contactPoint.x - body1.getPosition().x,
+                                contactPoint.y - body1.getPosition().y
+                        );
 
                          mainController.getSoundController().queueSound(second, Sounds.COIN_DROP);
                         break;
@@ -148,6 +192,8 @@ public class CollisionSystem extends IteratingSystem {
 
                         Mappers.death.get(first).isDead = true;
 
+                        entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x * PPM, contactPoint.y * PPM);
+
                         mainController.getSoundController().queueSound(first, Sounds.SPLASH);
                         break;
                     case FISH | SHIELD:
@@ -156,6 +202,7 @@ public class CollisionSystem extends IteratingSystem {
 
                         if (Mappers.shield.get(Mappers.attached.get(second).attachedTo).isProtected) {
                             Mappers.death.get(first).isDead = true;
+                            entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x * PPM, contactPoint.y * PPM);
                             mainController.getSoundController().queueSound(first, Sounds.SPLASH);
                         }
                         break;
@@ -188,6 +235,7 @@ public class CollisionSystem extends IteratingSystem {
         getEngine().addEntity(e);
 
         TextureComponent tc = Mappers.texture.get(e);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, e, 0, 0, 0, tc.width - 10, tc.height - 10, 0);
         mainController.getSoundController().queueSound(e, Sounds.COIN_DROP);
     }
 

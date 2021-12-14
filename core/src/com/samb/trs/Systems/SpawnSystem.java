@@ -183,8 +183,7 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         entityFactory.makeFollowEntity(fish, 2.6f);
 
         engine.addEntity(fish);
-
-        TextureComponent tc = Mappers.texture.get(fish);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, fish, 0, 0, 0, 40, 40, 0);
     }
 
     private void spawnCoinInQuadrant(Entity q) {
@@ -200,6 +199,9 @@ public class SpawnSystem extends EntitySystem implements Disposable {
 
         Entity coin = entityFactory.makeCoinEntity(x, y, viewport);
         engine.addEntity(coin);
+
+        TextureComponent tc = Mappers.texture.get(coin);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, coin, 0, 0, 0, tc.width - 10, tc.height - 10, 0);
     }
 
     private void spawnBoostInQuadrant(Entity q) {
@@ -217,6 +219,7 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         engine.addEntity(boost);
 
         TextureComponent tc = Mappers.texture.get(boost);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, boost, 0, 0, 0, tc.width - 10, tc.height - 10, 0);
     }
 
     private void spawnRockInQuadrant(Entity q) {
@@ -246,6 +249,8 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         }
 
         entityFactory.resize(rock, width, height);
+
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, rock, 0f, 0f, 0, tc.width - 10, tc.height - 10, 0);
 
         // Rotate rock randomly
         // float deg = random(-40f, 60f);
