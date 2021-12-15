@@ -6,7 +6,7 @@ public enum TextureRegions implements Resource<TextureRegion> {
     BACK_BUTTON("Back-Button", Atlases.TEXTURES), TRUNK("Trunk", Atlases.TEXTURES), BOOST("Boost", Atlases.TEXTURES), BOOST_ANZEIGE("Boost-Anzeige", Atlases.TEXTURES), CHECK_BUTTON("Check-Button", Atlases.TEXTURES),
     COIN("Coin", Atlases.TEXTURES), COIN_ANZEIGE("Coin-Anzeige", Atlases.TEXTURES), GEAR_BUTTON("Gear-Button", Atlases.TEXTURES), KANU_MANN("Kanu-Mann", Atlases.TEXTURES), KANU_PADDEL("Kanu-Paddel", Atlases.TEXTURES),
     KANU_RUMPF("Kanu-Rumpf", Atlases.TEXTURES), MENU_BUTTON("Menu-Button", Atlases.TEXTURES), PAUSE_BUTTON("Pause-Button", Atlases.TEXTURES), PARTICLE_SQUARE("ParticleSquare", Atlases.TEXTURES),
-    PARTICLE_WATER("ParticleWater", Atlases.TEXTURES), PreParticle("PreParticle", Atlases.TEXTURES), SCOREBOARD_SEPARATOR("Scoreboard-Separator", Atlases.TEXTURES), FISH("Fish", Atlases.TEXTURES),
+    PARTICLE_WATER("ParticleWater", Atlases.TEXTURES), PreParticle("PreParticle", Atlases.TEXTURES), SCOREBOARD_SEPARATOR("Scoreboard-Separator", Atlases.TEXTURES), FISH("Fish", Atlases.TEXTURES), FISH2("Fish2", Atlases.TEXTURES),
     TEXTBOX("Textbox", Atlases.TEXTURES), PLAY_BUTTON("Play-Button", Atlases.TEXTURES), REWIND_BUTTON("Rewind-Button", Atlases.TEXTURES), ROCK("Rock", Atlases.TEXTURES), ROCK2("Rock2", Atlases.TEXTURES),
     SHIELD_BACKGROUND("Shield-Background", Atlases.TEXTURES), SHIELD_BUTTON("Shield-Button", Atlases.TEXTURES), SHIELD_GITTER("Shield-Gitter", Atlases.TEXTURES), SHOP_BUTTON("Shop-Button", Atlases.TEXTURES), X_BUTTON("X-Button", Atlases.TEXTURES),
     SCOREBOARD("Scoreboard", Atlases.TEXTURES), KANU0("kanu0", Atlases.BOAT), KANU1("kanu1", Atlases.BOAT), KANU2("kanu2", Atlases.BOAT), KANU3("kanu3", Atlases.BOAT),

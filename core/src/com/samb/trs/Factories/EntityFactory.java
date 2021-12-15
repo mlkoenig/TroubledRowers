@@ -125,8 +125,8 @@ public class EntityFactory {
     }
 
     public Entity makeFishEntity(float x, float y, Viewport viewport) {
-        Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH, x, y, 1, 200, 160);
-        makeSteeringEntity(fish, null, SteeringComponent.SteeringState.NONE, -MathUtils.PI / 2f);
+        Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH2, x, y, 1, 200, 200);
+        makeSteeringEntity(fish, null, SteeringComponent.SteeringState.NONE, -MathUtils.PI);
         return makeCheckOutsideEntity(fish, viewport).add(engine.createComponent(CollisionComponent.class)).add(engine.createComponent(DeathComponent.class));
     }
 
