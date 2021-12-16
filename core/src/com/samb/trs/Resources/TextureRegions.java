@@ -16,7 +16,7 @@ public enum TextureRegions implements Resource<TextureRegion> {
     KANU19("kanu19", Atlases.BOAT), KANU20("kanu20", Atlases.BOAT), KANU21("kanu21", Atlases.BOAT), KANU22("kanu22", Atlases.BOAT), KANU23("kanu23", Atlases.BOAT),
     KANU24("kanu24", Atlases.BOAT), KANU25("kanu25", Atlases.BOAT), KANU26("kanu26", Atlases.BOAT), KANU27("kanu27", Atlases.BOAT), KANU28("kanu28", Atlases.BOAT),
     KANU29("kanu29", Atlases.BOAT), KANU30("kanu30", Atlases.BOAT), BACKGROUND("background", Atlases.BACKGROUNDS), BACKGROUND2("background2", Atlases.BACKGROUNDS),
-    HINTERGRUND("hintergrund", Atlases.BACKGROUNDS), UFER_LINKS_NEU("ufer_links_neu", Atlases.BACKGROUNDS), UFER_RECHTS_NEU("ufer_rechts_neu", Atlases.BACKGROUNDS);
+    HINTERGRUND("hintergrund", Atlases.BACKGROUNDS), UFER_LINKS("ufer_links_bounds", Atlases.BACKGROUNDS), UFER_RECHTS("ufer_rechts_bounds", Atlases.BACKGROUNDS);
 
     private final String id;
     private final Atlases atlas;

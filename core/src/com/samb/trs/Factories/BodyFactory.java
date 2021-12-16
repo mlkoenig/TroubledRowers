@@ -73,12 +73,12 @@ public class BodyFactory {
                 bodyDef.linearDamping = 1.4f;
                 bodyDef.type = BodyDef.BodyType.DynamicBody;
                 break;
-            case FISH:
+            case FISH2:
                 bodyDef.linearDamping = 1;
                 bodyDef.type = BodyDef.BodyType.DynamicBody;
                 break;
-            case UFER_RECHTS_NEU:
-            case UFER_LINKS_NEU:
+            case UFER_RECHTS:
+            case UFER_LINKS:
                 bodyDef.type = BodyDef.BodyType.KinematicBody;
                 break;
             case TRUNK:
@@ -104,6 +104,8 @@ public class BodyFactory {
         FixtureDef fixtureDef = new FixtureDef();
         TextureRegion reg = mainController.getAssetController().getAsset(region);
 
+        float norm_scl = 1.0f / reg.getRegionWidth();
+
         switch (region) {
             case COIN:
                 fixtureDef.density = 1;
@@ -119,7 +121,6 @@ public class BodyFactory {
                         BOOST |
                         TRUNK |
                         PADDEL;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
             case BOOST:
                 fixtureDef.density = 1;
@@ -135,7 +136,6 @@ public class BodyFactory {
                         BOOST |
                         TRUNK |
                         PADDEL;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
             case ROCK:
             case ROCK2:
@@ -153,10 +153,9 @@ public class BodyFactory {
                         BOOST |
                         TRUNK |
                         PADDEL;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
 
-            case FISH:
+            case FISH2:
                 fixtureDef.density = 1;
                 fixtureDef.restitution = 1;
                 fixtureDef.friction = 0f;
@@ -170,10 +169,9 @@ public class BodyFactory {
                         FISH |
                         BOOST |
                         TRUNK;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
-            case UFER_LINKS_NEU:
-            case UFER_RECHTS_NEU:
+            case UFER_LINKS:
+            case UFER_RECHTS:
                 fixtureDef.density = 1000;
                 fixtureDef.restitution = 1;
                 fixtureDef.friction = 1;
@@ -184,7 +182,6 @@ public class BodyFactory {
                         FISH |
                         BOOST |
                         TRUNK;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
             case TRUNK:
                 fixtureDef.density = 1200;
@@ -200,7 +197,6 @@ public class BodyFactory {
                         FISH |
                         BOOST |
                         TRUNK;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
 
             case KANU_RUMPF:
@@ -215,7 +211,6 @@ public class BodyFactory {
                         FISH |
                         BOOST |
                         TRUNK;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
 
             case SHIELD_BACKGROUND:
@@ -224,12 +219,6 @@ public class BodyFactory {
                 fixtureDef.friction = 0.9f;
                 fixtureDef.filter.categoryBits = SHIELD;
                 fixtureDef.filter.maskBits = ROCK | FISH | TRUNK;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
-                for (Fixture fixture : body.getFixtureList()) {
-                    if (fixture.getFilterData().categoryBits == SHIELD) {
-                        //fixture.setSensor(true);
-                    }
-                }
                 break;
             case KANU_PADDEL:
                 fixtureDef.density = 5000;
@@ -237,9 +226,10 @@ public class BodyFactory {
                 fixtureDef.friction = 0.9f;
                 fixtureDef.filter.categoryBits = PADDEL;
                 fixtureDef.filter.maskBits = ROCK | FISH | TRUNK;
-                bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, 1);
                 break;
         }
+
+        bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, norm_scl);
     }
 
     public World getWorld() {

@@ -172,8 +172,8 @@ public class SpawnSystem extends EntitySystem implements Disposable {
             steering = new CustomPrioritySteering<>(stc, null);
         }
         steering.setEpsilon(0.0001f);
-        //steering.add(SteeringPresets.getCollisionAvoidance(stc, world, 5));
-        steering.add(SteeringPresets.getRayCastObstacleAvoidance(stc, world, 2));
+        steering.add(SteeringPresets.getCollisionAvoidance(stc, world, 3));
+        //steering.add(SteeringPresets.getRayCastObstacleAvoidance(stc, world, 2));
         steering.add(SteeringPresets.getWander(stc));
         stc.steeringBehavior = steering;
         stc.setMaxLinearSpeed(13);

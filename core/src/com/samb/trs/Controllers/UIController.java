@@ -77,6 +77,20 @@ public class UIController extends BaseController{
                 });
             }
         });
+
+        gameHud.getShieldButton().addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                getMain().getGameWorldController().getEventInputProcessor().setSpaceDown(true);
+                //if (player.isShielded()) account.increaseUsedShields();
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                getMain().getGameWorldController().getEventInputProcessor().setSpaceDown(false);
+            }
+        });
     }
 
     @Override

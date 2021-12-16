@@ -60,9 +60,26 @@ public class RenderingSystem extends SortedIteratingSystem {
         drawEntity(Mappers.texture.get(renderQueue.first()), Mappers.transform.get(renderQueue.first()));
         renderQueue.removeIndex(0);
 
-        // Draw shadows
+        batch.setShader(null);
 
         batch.enableBlending();
+
+        for (Entity entity : renderQueue) {
+            if(Mappers.peCom.has(entity)) {
+                ParticleEffectComponent pec = Mappers.peCom.get(entity);
+
+                TransformComponent transformComponent = Mappers.transform.get(entity);
+
+                if (transformComponent.isHidden) {
+                    continue;
+                }
+
+                if (!pec.particleEffect.isComplete() && pec.timeTilDeath >= 0)
+                    pec.particleEffect.draw(batch, deltaTime);
+            }
+        }
+
+        // Draw shadows
 
         batch.setShader(mainController.getRenderController().getShader(Shaders.SHADOW));
 
@@ -93,12 +110,7 @@ public class RenderingSystem extends SortedIteratingSystem {
                 }
 
                 drawEntity(textureComponent, transformComponent);
-            } else if(Mappers.peCom.has(entity)) {
-                ParticleEffectComponent pec = Mappers.peCom.get(entity);
-                if (!pec.particleEffect.isComplete() && pec.timeTilDeath >= 0)
-                    pec.particleEffect.draw(batch, deltaTime);
             }
-
         }
 
         batch.end();

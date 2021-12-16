@@ -163,18 +163,17 @@ public class BodyEditorLoader {
     }
 
     public void attachFixture(Body body, String name, FixtureDef fd, float origWidth, float origHeight, float width, float height, float scale) {
-        RigidBodyModel rbModel = model.rigidBodies.get(name);
+        RigidBodyModel rbModel = model.rigidBodies.get(name + ".png");
         if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
-
-        Vector2 origin = vec.set(rbModel.origin).scl(scale);
 
         for (int i = 0, n = rbModel.polygons.size(); i < n; i++) {
             PolygonModel polygon = rbModel.polygons.get(i);
             Vector2[] vertices = polygon.buffer;
 
             for (int ii = 0, nn = vertices.length; ii < nn; ii++) {
-                vertices[ii] = newVec().set(transform(polygon.vertices.get(ii), origWidth, origHeight, width, height)).scl(scale);
-                vertices[ii].sub(origin);
+                Vector2 origin = vec.set(polygon.vertices.get(ii)).sub(rbModel.origin);
+                vertices[ii] = newVec().set(transform(origin, origWidth, origHeight, width, height)).scl(scale);
+                //vertices[ii].sub(origin);
             }
 
             polygonShape.set(vertices);

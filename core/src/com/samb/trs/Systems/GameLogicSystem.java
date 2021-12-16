@@ -4,9 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.utils.Array;
-import com.samb.trs.Components.PlayerComponent;
-import com.samb.trs.Components.RowingComponent;
-import com.samb.trs.Components.ShieldComponent;
+import com.samb.trs.Components.*;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Utilities.Mappers;
@@ -19,7 +17,7 @@ public class GameLogicSystem extends IteratingSystem {
     private boolean stateChange;
 
     public GameLogicSystem(MainController mainController) {
-        super(Family.one(PlayerComponent.class, ShieldComponent.class, RowingComponent.class).get());
+        super(Family.one(PlayerComponent.class, ShieldComponent.class, RowingComponent.class, ParticleEffectComponent.class).get());
         this.mainController = mainController;
         this.gameState = GameState.LOADING;
         entities_player = new Array<>();
@@ -36,6 +34,7 @@ public class GameLogicSystem extends IteratingSystem {
 
         switch (gameState) {
             case PLAY:
+                getEngine().getSystem(GameOverSystem.class).setProcessing(true);
                 getEngine().getSystem(PhysicsSystem.class).setProcessing(true);
                 getEngine().getSystem(CameraSystem.class).setProcessing(true);
                 getEngine().getSystem(SpawnSystem.class).setProcessing(true);
@@ -58,6 +57,7 @@ public class GameLogicSystem extends IteratingSystem {
                             }
                         }
                 );
+                getEngine().getSystem(GameOverSystem.class).setProcessing(false);
                 getEngine().getSystem(PhysicsSystem.class).setProcessing(false);
                 getEngine().getSystem(CameraSystem.class).setProcessing(false);
                 getEngine().getSystem(SpawnSystem.class).setProcessing(false);
@@ -72,6 +72,7 @@ public class GameLogicSystem extends IteratingSystem {
                 break;
             case LOADING:
             case MENU:
+                getEngine().getSystem(GameOverSystem.class).setProcessing(false);
                 getEngine().getSystem(PhysicsSystem.class).setProcessing(true);
                 getEngine().getSystem(CameraSystem.class).setProcessing(true);
                 getEngine().getSystem(SpawnSystem.class).setProcessing(true);
@@ -128,13 +129,22 @@ public class GameLogicSystem extends IteratingSystem {
                     Mappers.transform.get(grid).isHidden = true;
                     Mappers.transform.get(shield).isHidden = true;
                 }
+            } else if(Mappers.peCom.has(entity)) {
+                Mappers.transform.get(entity).isHidden = !visible;
             }
         }
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        entities_player.add(entity);
+        if (Mappers.peCom.has(entity) && Mappers.attached.has(entity)) {
+            AttachedComponent ac = Mappers.attached.get(entity);
+
+            if (ac.isAttached && Mappers.player.has(ac.attachedTo)) {
+                entities_player.add(entity);
+            }
+
+        } else entities_player.add(entity);
     }
 
     public enum GameState {PLAY, PAUSE, GAMEOVER, MENU, LOADING, NONE}

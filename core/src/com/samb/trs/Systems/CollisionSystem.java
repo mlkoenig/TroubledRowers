@@ -65,7 +65,7 @@ public class CollisionSystem extends IteratingSystem {
                         first = tc.type == BOAT ? entity : collidedEntity;
                         if (!Mappers.shield.get(first).isProtected) {
                             //mainController.getSoundController().queueSound(first, Sounds.CRASH);
-                            getEngine().getSystem(GameLogicSystem.class).setGameState(GameLogicSystem.GameState.GAMEOVER);
+                            getEngine().getSystem(GameOverSystem.class).gameOver();
                         }
                         break;
                     case ROCK:
@@ -190,9 +190,9 @@ public class CollisionSystem extends IteratingSystem {
                     case FISH | SHORE:
                         first = tc.type == FISH ? entity : collidedEntity;
 
-                        Mappers.death.get(first).isDead = true;
+                        //Mappers.death.get(first).isDead = true;
 
-                        entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x * PPM, contactPoint.y * PPM);
+                        //entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x * PPM, contactPoint.y * PPM);
 
                         mainController.getSoundController().queueSound(first, Sounds.SPLASH);
                         break;

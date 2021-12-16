@@ -2,6 +2,7 @@ package com.samb.trs.UI.Hud;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -102,5 +103,9 @@ public class GameHud extends Group {
                 )
         );
         setTouchable(Touchable.disabled);
+    }
+
+    public ImageButton getShieldButton() {
+        return shieldButton;
     }
 }

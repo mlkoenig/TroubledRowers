@@ -125,7 +125,7 @@ public class EntityFactory {
     }
 
     public Entity makeFishEntity(float x, float y, Viewport viewport) {
-        Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH2, x, y, 1, 200, 200);
+        Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH2, x, y, 1, 169, 200);
         makeSteeringEntity(fish, null, SteeringComponent.SteeringState.NONE, -MathUtils.PI);
         return makeCheckOutsideEntity(fish, viewport).add(engine.createComponent(CollisionComponent.class)).add(engine.createComponent(DeathComponent.class));
     }
@@ -137,14 +137,14 @@ public class EntityFactory {
     }
 
     public Entity makeLeftShoreEntity(float offsetY) {
-        return makeBodyEntity(TypeComponent.SHORE, TextureRegions.UFER_LINKS_NEU, -WorldWidth / 2f + (410 / 4092f) * WorldHeight / 2f, offsetY, 2, (410 / 4092f) * WorldHeight, WorldHeight)
+        return makeBodyEntity(TypeComponent.SHORE, TextureRegions.UFER_LINKS, -WorldWidth / 2f + (410 / 4092f) * WorldHeight / 2f, offsetY, 2, (410 / 4092f) * WorldHeight, WorldHeight)
                 .add(engine.createComponent(CollisionComponent.class));
     }
 
     // HELPING METHODS
 
     public Entity makeRightShoreEntity(float offsetY) {
-        return makeBodyEntity(TypeComponent.SHORE, TextureRegions.UFER_RECHTS_NEU, WorldWidth / 2f - (410 / 4092f) * WorldHeight / 2f, offsetY, 2, (410 / 4092f) * WorldHeight, WorldHeight)
+        return makeBodyEntity(TypeComponent.SHORE, TextureRegions.UFER_RECHTS, WorldWidth / 2f - (410 / 4092f) * WorldHeight / 2f, offsetY, 2, (410 / 4092f) * WorldHeight, WorldHeight)
                 .add(engine.createComponent(CollisionComponent.class));
     }
 
@@ -254,7 +254,7 @@ public class EntityFactory {
     }
 
     public Entity makeAttachedParticleEffect(Particles p, Entity attached, float xo, float yo) {
-        return makeAttachedParticleEffect(p, attached, xo, yo, 4, 0.5f);
+        return makeAttachedParticleEffect(p, attached, xo, yo, 0, 0.5f);
     }
 
     public Entity makeAttachedParticleEffect(Particles p, Entity attached, float xo, float yo, float z, float timeTilDeath) {

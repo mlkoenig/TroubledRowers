@@ -41,13 +41,14 @@ public class EngineController extends BaseController implements Updatable {
         engine.addSystem(new RenderingSystem(mainController));
         engine.addSystem(new PhysicsDebugSystem(mainController, world));
 
+        engine.addSystem(new GameOverSystem());
+
         gameLogicSystem = new GameLogicSystem(mainController);
         engine.addSystem(gameLogicSystem);
     }
 
     @Override
     public void update(float dt) {
-        world.step(dt, 6, 3);
         eventInputProcessor.update(dt);
         engine.update(dt);
     }

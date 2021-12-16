@@ -35,6 +35,7 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
         body = null;
         orientationOffset = 0;
         steeringBehavior = null;
+        independentFacing = false;
 
     }
 
