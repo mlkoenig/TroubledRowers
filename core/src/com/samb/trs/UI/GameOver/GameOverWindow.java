@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Controllers.RenderController;
+import com.samb.trs.Interfaces.UIElement;
 import com.samb.trs.Resources.BitmapFonts;
 import com.samb.trs.Resources.Bundles;
 import com.samb.trs.Resources.Constants;

@@ -40,6 +40,7 @@ public class UIController extends BaseController{
 
     public void render(float dt){
         gameMenu.update(dt);
+        gameHud.update(dt);
         stage.act(dt);
         stage.draw();
     }

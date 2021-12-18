@@ -14,10 +14,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.samb.trs.Controllers.AssetController;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Controllers.RenderController;
+import com.samb.trs.Interfaces.UIElement;
+import com.samb.trs.Interfaces.Updatable;
+import com.samb.trs.Model.Score;
 import com.samb.trs.Resources.BitmapFonts;
 import com.samb.trs.Resources.TextureRegions;
 
-public class GameHud extends Group {
+public class GameHud extends Group implements UIElement, Updatable {
     private MainController mainController;
     private AssetController assetController;
     private FitViewport viewport;
@@ -25,12 +28,14 @@ public class GameHud extends Group {
     private ImageButton pauseButton, shieldButton;
     private Label scoreLabel;
     private float safeHeight;
+    private Score score;
 
     public GameHud(MainController mainController) {
         this.mainController = mainController;
         this.assetController = mainController.getAssetController();
         this.viewport = mainController.getRenderController().getStaticViewport();
         this.safeHeight = mainController.getRenderController().getIosSafeArea().y;
+        this.score = mainController.getGameWorldController().getScore();
 
         initIcons();
         initButtons();
@@ -83,21 +88,28 @@ public class GameHud extends Group {
         addActor(scoreLabel);
     }
 
-    public void show(Runnable runnable) {
+    @Override
+    public void update(float dt) {
+        scoreLabel.setText((int) score.getScore());
+        coinIcon.setCount(score.getCollected_coins());
+        boostIcon.setCount(score.getBoosts());
+    }
+
+    public void show(Runnable runnable, float duration, Interpolation interpolation) {
         setVisible(true);
         addAction(Actions.alpha(0.0f));
         addAction(Actions.sequence(
-                Actions.alpha(1.0f, 0.5f, Interpolation.fade),
+                Actions.alpha(1.0f, duration, interpolation),
                 Actions.run(runnable)
         ));
         setTouchable(Touchable.enabled);
     }
 
-    public void hide(Runnable runnable) {
+    public void hide(Runnable runnable, float duration, Interpolation interpolation) {
         addAction(Actions.alpha(1.0f));
         addAction(
                 Actions.sequence(
-                        Actions.alpha(0.0f, 0.5f, Interpolation.fade),
+                        Actions.alpha(0.0f, duration, interpolation),
                         Actions.visible(false),
                         Actions.run(runnable)
                 )

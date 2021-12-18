@@ -2,12 +2,18 @@ package com.samb.trs.Resources;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 
 public class Constants {
 
     // GENERAL CONSTANTS
     public static class General {
-        public static final boolean DEBUGGING = true;
+        public static final boolean DEBUGGING = false;
+    }
+
+    public static class UI {
+        public static final float DEFAULT_DURATION = 0.3f;
+        public static final Interpolation DEFAULT_INTERPOLATION = Interpolation.fade;
     }
 
     public static class Camera {

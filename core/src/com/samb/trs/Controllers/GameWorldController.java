@@ -12,6 +12,7 @@ import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Particles;
 import com.samb.trs.Systems.*;
 import com.samb.trs.Utilities.Mappers;
+import com.samb.trs.Utilities.NullRunnable;
 
 import static com.samb.trs.Resources.Constants.Camera.START_VELOCITY;
 
@@ -75,21 +76,17 @@ public class GameWorldController extends BaseController implements Updatable {
     }
 
     public void newGame(){
-        getMain().getUiController().getGameMenu().hide(new Runnable() {
-            @Override
-            public void run() {
-                getMain().getUiController().getGameHud().show(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                resetGameWorld();
-                                gameLogicSystem.setGameState(GameLogicSystem.GameState.PLAY);
+        getMain().getUiController().getGameMenu().hide(new NullRunnable());
+        getMain().getUiController().getGameHud().show(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        resetGameWorld();
+                        gameLogicSystem.setGameState(GameLogicSystem.GameState.PLAY);
 
-                            }
-                        }
-                );
-            }
-        });
+                    }
+                }
+        );
     }
 
     public void update(float dt) {
@@ -106,6 +103,10 @@ public class GameWorldController extends BaseController implements Updatable {
 
     public GameLogicSystem.GameState getGameState(){
         return engineController.getGameLogicSystem().getGameState();
+    }
+
+    public Score getScore() {
+        return score;
     }
 
     @Override

@@ -1,15 +1,17 @@
 package com.samb.trs.UI;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.samb.trs.Controllers.AssetController;
 import com.samb.trs.Controllers.MainController;
+import com.samb.trs.Interfaces.UIElement;
 import com.samb.trs.Resources.TextureRegions;
 
-public abstract class UIWindow extends Table {
+public abstract class UIWindow extends Table implements UIElement {
     protected MainController mainController;
     protected AssetController assets;
     protected Color labelColor;
@@ -29,17 +31,17 @@ public abstract class UIWindow extends Table {
         center();
     }
 
-    public void show(Runnable onShowRunnable) {
+    public void show(Runnable runnable, float duration, Interpolation interpolation) {
         if (isHidden) {
-            onShow(onShowRunnable);
+            onShow(runnable, duration, interpolation);
             isHidden = false;
             setTouchable(Touchable.enabled);
         }
     }
 
-    public void hide(Runnable onHideRunnable) {
+    public void hide(Runnable runnable, float duration, Interpolation interpolation) {
         if (!isHidden) {
-            onHide(onHideRunnable);
+            onHide(runnable, duration, interpolation);
             isHidden = true;
             setTouchable(Touchable.disabled);
         }
@@ -55,9 +57,9 @@ public abstract class UIWindow extends Table {
 
     protected abstract void resetWindow();
 
-    protected abstract void onShow(Runnable runnable);
+    protected abstract void onShow(Runnable runnable, float duration, Interpolation interpolation);
 
-    protected abstract void onHide(Runnable runnable);
+    protected abstract void onHide(Runnable runnable, float duration, Interpolation interpolation);
 
     public boolean isHidden() {
         return isHidden;

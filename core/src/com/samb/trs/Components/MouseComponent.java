@@ -17,7 +17,7 @@ public class MouseComponent implements Component, Pool.Poolable {
 
     @Override
     public void reset() {
-        if (world != null && mouseJoint != null && !world.isLocked()) world.destroyJoint(mouseJoint);
+        //if (world != null && mouseJoint != null && !world.isLocked()) world.destroyJoint(mouseJoint);
         mouseJoint = null;
         world = null;
         offset.setZero();

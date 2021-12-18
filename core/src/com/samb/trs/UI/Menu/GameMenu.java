@@ -13,11 +13,12 @@ import com.badlogic.gdx.utils.Align;
 import com.samb.trs.Controllers.AssetController;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Controllers.RenderController;
+import com.samb.trs.Interfaces.UIElement;
 import com.samb.trs.Model.Timer;
 import com.samb.trs.Resources.TextureRegions;
 import com.samb.trs.UI.Hud.CollectIcon;
 
-public class GameMenu extends Group {
+public class GameMenu extends Group implements UIElement {
 
     private MainController mainController;
     private AssetController assetController;
@@ -71,11 +72,12 @@ public class GameMenu extends Group {
         pressToPlay.update(dt);
     }
 
-    public void show(Runnable runnable) {
+    @Override
+    public void show(Runnable runnable, float duration, Interpolation interpolation) {
         setVisible(true);
         addAction(Actions.alpha(0.0f));
         addAction(Actions.sequence(
-                Actions.alpha(1.0f, 0.5f, Interpolation.fade),
+                Actions.alpha(1.0f, duration, interpolation),
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
@@ -87,12 +89,13 @@ public class GameMenu extends Group {
         setTouchable(Touchable.enabled);
     }
 
-    public void hide(Runnable runnable) {
+    @Override
+    public void hide(Runnable runnable, float duration, Interpolation interpolation) {
         pressToPlay.setAnimate(false);
         addAction(Actions.alpha(1.0f));
         addAction(
                 Actions.sequence(
-                        Actions.alpha(0.0f, 0.5f, Interpolation.fade),
+                        Actions.alpha(0.0f, duration, interpolation),
                         Actions.visible(false),
                         Actions.run(runnable)
                 )

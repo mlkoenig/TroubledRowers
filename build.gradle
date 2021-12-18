@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.4'
-        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.14'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
         
 
     }
@@ -23,7 +23,7 @@ allprojects {
     ext {
         appName = "Troubled Rowers"
         gdxVersion = '1.10.0'
-        roboVMVersion = '2.3.14'
+        roboVMVersion = '2.3.12'
         gamesvcsVersion = '1.0.0'
         box2DLightsVersion = '1.5'
         ashleyVersion = '1.7.3'

@@ -6,8 +6,6 @@ import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Resources.Constants;
 
 public class UIWindowStandard extends UIWindow {
-    private static final float DURATION = 0.5f;
-    private static final Interpolation INTERPOLATION = Interpolation.fade;
 
     public UIWindowStandard(MainController mainController) {
         super(mainController, Constants.Rendering.WorldWidth * 0.9f, Constants.Rendering.WorldWidth * 0.9f);
@@ -15,24 +13,24 @@ public class UIWindowStandard extends UIWindow {
     }
 
     @Override
-    protected void onShow(Runnable runnable) {
+    protected void onShow(Runnable runnable, float duration, Interpolation interpolation) {
         setVisible(true);
         addAction(Actions.alpha(0.0f));
         addAction(Actions.moveTo(getCenterX(), -getHeight()));
-        addAction(Actions.moveTo(getCenterX(), getCenterY(), DURATION, INTERPOLATION));
+        addAction(Actions.moveTo(getCenterX(), getCenterY(), duration, interpolation));
         addAction(Actions.sequence(
-                    Actions.alpha(1.0f, DURATION, INTERPOLATION),
+                    Actions.alpha(1.0f, duration, interpolation),
                     Actions.run(runnable)
                 )
         );
     }
 
     @Override
-    protected void onHide(Runnable runnable) {
-        addAction(Actions.alpha(0.0f, DURATION, INTERPOLATION));
+    protected void onHide(Runnable runnable, float duration, Interpolation interpolation) {
+        addAction(Actions.alpha(0.0f, duration, interpolation));
         addAction(
                 Actions.sequence(
-                        Actions.moveTo(getCenterX(), -getHeight(), DURATION, INTERPOLATION),
+                        Actions.moveTo(getCenterX(), -getHeight(), duration, interpolation),
                         Actions.visible(false),
                         Actions.run(runnable)
                 )
