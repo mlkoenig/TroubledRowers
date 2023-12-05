@@ -33,11 +33,10 @@
     <pattern>org.apache.harmony.security.provider.crypto.CryptoProvider</pattern>
   </forceLinkClasses>
   <libs>
-      <lib>z</lib>   
+    <lib>z</lib>
   </libs>
   <frameworks>
     <framework>UIKit</framework>
-    <framework>OpenGLES</framework>
     <framework>QuartzCore</framework>
     <framework>CoreGraphics</framework>
     <framework>OpenAL</framework>
@@ -45,4 +44,11 @@
     <framework>AVFoundation</framework>
     <framework>GameController</framework>
   </frameworks>
+  <tools>
+    <linker>
+      <flags>
+        <flag>-ld_classic</flag>
+      </flags>
+    </linker>
+  </tools>
 </config>

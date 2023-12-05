@@ -1,18 +1,16 @@
 package com.samb.trs.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.samb.trs.GameApplication;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 405;
-		config.height = 720;
-		config.vSyncEnabled = false;
-		config.foregroundFPS = 0; // Setting to 0 disables foreground fps throttling
-		config.backgroundFPS = 0; // Setting to 0 disables background fps throttling
-		config.samples = 3;
-		new LwjglApplication(new GameApplication(), config);
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowedMode(430, 932);
+		config.useVsync(false);
+		config.setForegroundFPS(0);
+		config.setIdleFPS(0);
+		new Lwjgl3Application(new GameApplication(), config);
 	}
 }
