@@ -39,22 +39,22 @@ public class GameMenu extends Group implements UIElement {
     private void initCoins() {
         this.coinIcon = new CollectIcon(mainController,
                 new TextureRegionDrawable(assetController.getAsset(TextureRegions.COIN_ANZEIGE)));
-        coinIcon.setPosition(RenderController.p2w(80), RenderController.p2h(92));
+        coinIcon.setPosition(RenderController.wperc(80), RenderController.hperc(92));
     }
 
     private void initSettingsButton() {
         this.settingsButton = new ImageButton(new TextureRegionDrawable(assetController.getAsset(TextureRegions.GEAR_BUTTON)));
-        settingsButton.setBounds(RenderController.p2w(5), RenderController.p2h(92),
-                RenderController.p2w(10), RenderController.p2w(10));
+        settingsButton.setBounds(RenderController.wperc(5), RenderController.hperc(92),
+                RenderController.wperc(10), RenderController.wperc(10));
     }
 
     private void initPressToPlay() {
         pressToPlay = new BlinkLabel("press to play", assetController.getSkin());
         pressToPlay.setAlignment(Align.center);
         pressToPlay.setBounds(0,
-                RenderController.p2h(15),
-                RenderController.p2w(100),
-                RenderController.p2h(10)
+                RenderController.hperc(15),
+                RenderController.wperc(100),
+                RenderController.hperc(10)
         );
     }
 
@@ -70,6 +70,7 @@ public class GameMenu extends Group implements UIElement {
 
     public void update(float dt) {
         pressToPlay.update(dt);
+        coinIcon.setCount((int) mainController.getSaveController().getAccount().getCoins());
     }
 
     @Override

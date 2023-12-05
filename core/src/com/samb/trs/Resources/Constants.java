@@ -8,7 +8,7 @@ public class Constants {
 
     // GENERAL CONSTANTS
     public static class General {
-        public static final boolean DEBUGGING = false;
+        public static final boolean DEBUGGING = true;
     }
 
     public static class UI {
@@ -31,7 +31,7 @@ public class Constants {
         public static final int QUADRANT_DEPTH_HORIZONTAL = 3;
         public static final int QUADRANT_DEPTH_VERTICAL = 5;
         public static final float COIN_PROBABILITY = 0.4f;
-        public static final float FISH_PROBABILITY = 1f;
+        public static final float FISH_PROBABILITY = 4f;
         public static final float BOOST_PROBABILITY = 0.3f;
         public static final float TRUNK_PROBABILITY = 0.6f;
         public static final float COIN_SPAWN_TIMER = 7f * Camera.START_VELOCITY;
@@ -60,15 +60,19 @@ public class Constants {
     public static class Rendering {
 
         // RENDER CONSTANTS
-        public static int WorldWidth = 1440;
-        public static int WorldHeight = calculateHeight(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        // public static int WorldWidth = 1440;
+        public static int WorldWidth = 8;
+        public static int WorldHeight = calculateWorldHeight(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         public static int CREATION_HEIGHT = WorldHeight + 4000;
-        public static float PPM = 100;
-        public static float PPM_INV = 0.01f;
+
         public static float TIMESTEP = 1 / 60f;
 
-        public static int calculateHeight(int width, int height) {
-            return ((int) (height / ((float) width) * WorldWidth));
+        public static float ratio(int width, int height) {
+            return (height / ((float) width));
+        }
+
+        public static int calculateWorldHeight(int width, int height){
+            return (int) (WorldWidth * ratio(width, height));
         }
     }
 

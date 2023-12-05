@@ -8,6 +8,8 @@ import java.io.Serializable;
 public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
     private long coins;
+
+    private long boosts;
     private long highScore;
     private String gamertag;
 
@@ -19,6 +21,7 @@ public class Account implements Serializable {
 
     public Account(MainController mainController) {
         coins = 0;
+        boosts = 0;
         highScore = 0;
         rocksDestroyed = 0;
         fishDestroyed = 0;
@@ -46,6 +49,14 @@ public class Account implements Serializable {
 
     public void increaseUsedShields() {
         usedShields++;
+    }
+
+    public void increaseCollectedBoosts() {
+        boosts++;
+    }
+
+    public long getBoosts() {
+        return boosts;
     }
 
     public long getRocksDestroyed() {

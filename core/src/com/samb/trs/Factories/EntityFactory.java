@@ -27,7 +27,7 @@ import com.samb.trs.Utilities.Mappers;
 import static com.samb.trs.Resources.Constants.Rendering.*;
 
 public class EntityFactory {
-    private static final float frequencyHz = 15f;
+    private static final float frequencyHz = 2f;
     private static EntityFactory entityFactory;
     private BodyFactory bodyFactory;
     private PooledEngine engine;
@@ -103,7 +103,7 @@ public class EntityFactory {
     }
 
     public Entity makeCoinEntity(float x, float y, Viewport viewport) {
-        Entity coin = makeBodyEntity(TypeComponent.COIN, TextureRegions.COIN, x, y, 1, 50, 50);
+        Entity coin = makeBodyEntity(TypeComponent.COIN, TextureRegions.COIN, x, y, 1, 0.25f, 0.25f);
         makeSteeringEntity(coin);
         return makeCheckOutsideEntity(coin, viewport).add(engine.createComponent(CollectComponent.class))
                 .add(engine.createComponent(DeathComponent.class))
@@ -111,7 +111,7 @@ public class EntityFactory {
     }
 
     public Entity makeBoostEntity(float x, float y, Viewport viewport) {
-        Entity boost = makeBodyEntity(TypeComponent.BOOST, TextureRegions.BOOST, x, y, 1, 50, 50);
+        Entity boost = makeBodyEntity(TypeComponent.BOOST, TextureRegions.BOOST, x, y, 1, 0.25f, 0.25f);
         makeSteeringEntity(boost);
         return makeCheckOutsideEntity(boost, viewport).add(engine.createComponent(CollectComponent.class))
                 .add(engine.createComponent(DeathComponent.class))
@@ -119,19 +119,19 @@ public class EntityFactory {
     }
 
     public Entity makeRockEntity(float x, float y, TextureRegions region, Viewport viewport) {
-        Entity rock = makeBodyEntity(TypeComponent.ROCK, region, x, y, 1, 250, 250);
+        Entity rock = makeBodyEntity(TypeComponent.ROCK, region, x, y, 1, 1.4f, 1.4f);
         makeSteeringEntity(rock);
         return makeCheckOutsideEntity(rock, viewport).add(engine.createComponent(CollisionComponent.class)).add(engine.createComponent(DeathComponent.class));
     }
 
     public Entity makeFishEntity(float x, float y, Viewport viewport) {
-        Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH2, x, y, 1, 169, 200);
-        makeSteeringEntity(fish, null, SteeringComponent.SteeringState.NONE, -MathUtils.PI);
+        Entity fish = makeBodyEntity(TypeComponent.FISH, TextureRegions.FISH2, x, y, 1, 0.94f, 1.11f);
+        makeSteeringEntity(fish, null, SteeringComponent.SteeringState.NONE, MathUtils.PI);
         return makeCheckOutsideEntity(fish, viewport).add(engine.createComponent(CollisionComponent.class)).add(engine.createComponent(DeathComponent.class));
     }
 
     public Entity makeTrunkEntity(float x, float y, Viewport viewport) {
-        Entity trunk = makeBodyEntity(TypeComponent.TRUNK, TextureRegions.TRUNK, x, y, 1, 150, 450);
+        Entity trunk = makeBodyEntity(TypeComponent.TRUNK, TextureRegions.TRUNK, x, y, 1, 0.83f, 2.5f);
         makeSteeringEntity(trunk);
         return makeCheckOutsideEntity(trunk, viewport).add(engine.createComponent(CollisionComponent.class)).add(engine.createComponent(DeathComponent.class));
     }
@@ -186,8 +186,10 @@ public class EntityFactory {
         stc.currentMode = state;
         stc.steeringBehavior = steeringBehavior;
 
-        if (Mappers.texture.has(entity))
-            stc.boundingRadius = Math.max(Mappers.texture.get(entity).width, Mappers.texture.get(entity).height) / Constants.Rendering.PPM / 2f;
+        if (Mappers.texture.has(entity)){
+            TextureComponent tc = Mappers.texture.get(entity);
+            stc.boundingRadius = 0.5f * RenderController.s2w(Math.max(tc.width, tc.height));
+        }
 
         return entity.add(stc);
     }
@@ -269,8 +271,8 @@ public class EntityFactory {
 
         AttachedComponent ac = engine.createComponent(AttachedComponent.class);
         ac.attachedTo = attached;
-        ac.offset.x = xo * PPM;
-        ac.offset.y = yo * PPM;
+        ac.offset.x = xo;
+        ac.offset.y = yo;
 
         TransformComponent tc = engine.createComponent(TransformComponent.class);
         tc.z = z;
@@ -326,10 +328,10 @@ public class EntityFactory {
 
             // Create new Shield Body
             BodyComponent bc = Mappers.body.get(entity);
-            sc.shieldEntity = makeBodyEntity(TypeComponent.SHIELD, TextureRegions.SHIELD_BACKGROUND, bc.body.getPosition().x * Constants.Rendering.PPM, bc.body.getPosition().y * Constants.Rendering.PPM, 2, 450, 450);
+            sc.shieldEntity = makeBodyEntity(TypeComponent.SHIELD, TextureRegions.SHIELD_BACKGROUND, bc.body.getPosition().x, bc.body.getPosition().y, 2, 2.5f, 2.5f);
             Mappers.transform.get(sc.shieldEntity).z = 3;
 
-            sc.gridEntity = makeSprite(TextureRegions.SHIELD_GITTER, bc.body.getPosition().x, bc.body.getPosition().y, 3, 450, 450, true);
+            sc.gridEntity = makeSprite(TextureRegions.SHIELD_GITTER, bc.body.getPosition().x, bc.body.getPosition().y, 3, 2.5f, 2.5f, true);
 
             // Add Entity as attached Component to the shield
             AttachedComponent ac1 = engine.createComponent(AttachedComponent.class);
@@ -406,8 +408,8 @@ public class EntityFactory {
     public Entity makeRowingComponent(Entity entity) {
         RowingComponent rc = engine.createComponent(RowingComponent.class);
         BodyComponent bc = Mappers.body.get(entity);
-        rc.paddle = makeBodyEntity(TypeComponent.PADDEL, TextureRegions.KANU_PADDEL, bc.body.getPosition().x * Constants.Rendering.PPM, bc.body.getPosition().y * Constants.Rendering.PPM, 3, 225, 23);
-        rc.man = makeSprite(TextureRegions.KANU_MANN, bc.body.getPosition().x* PPM, bc.body.getPosition().y * PPM, 2, 41, 73, true);
+        rc.paddle = makeBodyEntity(TypeComponent.PADDEL, TextureRegions.KANU_PADDEL, bc.body.getPosition().x, bc.body.getPosition().y, 3, 225, 23);
+        rc.man = makeSprite(TextureRegions.KANU_MANN, bc.body.getPosition().x, bc.body.getPosition().y, 2, 41, 73, true);
         rc.frequency = 1f;
 
         Mappers.transform.get(rc.paddle).isHidden = true;
@@ -419,10 +421,10 @@ public class EntityFactory {
         ac1.attachedTo = entity;
 
         makeMovableEntity(rc.paddle, 10000.0f * Mappers.body.get(rc.paddle).body.getMass(), frequencyHz);
-        Mappers.mouse.get(rc.paddle).offset.set(0, -RenderController.cph() * 5 * PPM_INV);
+        Mappers.mouse.get(rc.paddle).offset.set(0, -RenderController.w2h(1.0f) * 5);
 
         ac2.attachedTo = entity;
-        ac2.offset.set(0, -RenderController.cph() * 10);
+        ac2.offset.set(0, -RenderController.w2h(1.0f) * 10);
 
         rc.paddle.add(ac1);
         rc.man.add(ac2);
@@ -458,11 +460,16 @@ public class EntityFactory {
             tex.width = width;
             tex.height = height;
 
+            if (Mappers.steering.has(entity)) {
+                Mappers.steering.get(entity).boundingRadius = 0.5f * RenderController.s2w(Math.max(width, height));
+
+            }
+
             World world = bc.body.getWorld();
 
             world.destroyBody(bc.body);
             bc.body = bodyFactory.makeBody(tex.region, trf.position.x, trf.position.y, width, height);
-            bc.body.setTransform(trf.position.x / Constants.Rendering.PPM, trf.position.y / Constants.Rendering.PPM, trf.rotation * MathUtils.degRad);
+            bc.body.setTransform(trf.position.x, trf.position.y, trf.rotation * MathUtils.degRad);
             bc.body.setUserData(entity);
 
             bc.body.setLinearVelocity(bc.linear_vel);

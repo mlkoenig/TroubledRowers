@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.samb.trs.Interfaces.Updatable;
 import com.samb.trs.Model.Score;
+import com.samb.trs.Resources.Constants;
 import com.samb.trs.Systems.*;
 
 public class EngineController extends BaseController implements Updatable {
@@ -36,10 +37,13 @@ public class EngineController extends BaseController implements Updatable {
         engine.addSystem(new RowingSystem(mainController));
         engine.addSystem(new CollisionSystem(mainController, score));
         engine.addSystem(new CollectSystem());
-        engine.addSystem(new DeathSystem());
+        engine.addSystem(new DeathSystem(mainController));
         engine.addSystem(new ParticleEffectSystem());
         engine.addSystem(new RenderingSystem(mainController));
-        engine.addSystem(new PhysicsDebugSystem(mainController, world));
+
+        if (Constants.General.DEBUGGING) {
+            engine.addSystem(new PhysicsDebugSystem(mainController, world));
+        }
 
         engine.addSystem(new GameOverSystem());
 

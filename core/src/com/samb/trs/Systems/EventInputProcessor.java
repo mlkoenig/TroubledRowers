@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.samb.trs.Components.TransformComponent;
+import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Resources.Constants;
 
 public class EventInputProcessor implements InputProcessor {
@@ -55,10 +56,10 @@ public class EventInputProcessor implements InputProcessor {
         unproject(input, Gdx.input.getX(0), Gdx.input.getY(0));
         if (isDown) {
             lastTouch.set(Gdx.input.getX(0), Gdx.input.getY(0));
-            target.set(input.x + offset.x, input.y + offset.y).scl(Constants.Rendering.PPM_INV);
+            target.set(input.x + offset.x, input.y + offset.y).scl(RenderController.s2w(1.0f));
         } else {
             unproject(lastPos, lastTouch);
-            target.set(lastPos.x + offset.x, lastPos.y + offset.y).scl(Constants.Rendering.PPM_INV);
+            target.set(lastPos.x + offset.x, lastPos.y + offset.y).scl(RenderController.s2w(1.0f));
         }
     }
 
@@ -121,6 +122,11 @@ public class EventInputProcessor implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         isDown = false;
         return true;
+    }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
     }
 
     @Override

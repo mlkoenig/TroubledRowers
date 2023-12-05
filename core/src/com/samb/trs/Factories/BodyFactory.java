@@ -8,7 +8,6 @@ import com.samb.trs.Resources.TextureRegions;
 import com.samb.trs.Utilities.BodyEditorLoader;
 
 import static com.samb.trs.Components.TypeComponent.*;
-import static com.samb.trs.Resources.Constants.Rendering.PPM;
 
 public class BodyFactory {
     private static BodyFactory bodyFactory;
@@ -38,7 +37,7 @@ public class BodyFactory {
 
     public Body makeQuadrantBody(float x, float y, float width, float height) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x * Constants.Rendering.PPM_INV, y * Constants.Rendering.PPM_INV);
+        bodyDef.position.set(x, y);
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
         Body body = world.createBody(bodyDef);
@@ -46,7 +45,7 @@ public class BodyFactory {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.isSensor = true;
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / PPM / 2f, height / PPM / 2f);
+        shape.setAsBox(0.5f * width, 0.5f * height);
         fixtureDef.shape = shape;
 
         body.createFixture(fixtureDef);
@@ -58,7 +57,7 @@ public class BodyFactory {
 
     private BodyDef defineBodyDef(TextureRegions region, float x, float y) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x * Constants.Rendering.PPM_INV, y * Constants.Rendering.PPM_INV);
+        bodyDef.position.set(x, y);
 
         switch (region) {
             default:
@@ -100,13 +99,11 @@ public class BodyFactory {
         return bodyDef;
     }
 
-    private void defineFixtures(Body body, TextureRegions region, float width, float height) {
+    private void defineFixtures(Body body, TextureRegions regions, float width, float height) {
         FixtureDef fixtureDef = new FixtureDef();
-        TextureRegion reg = mainController.getAssetController().getAsset(region);
+        TextureRegion region = mainController.getAssetController().getAsset(regions);
 
-        float norm_scl = 1.0f / reg.getRegionWidth();
-
-        switch (region) {
+        switch (regions) {
             case COIN:
                 fixtureDef.density = 1;
                 fixtureDef.friction = 1;
@@ -155,8 +152,9 @@ public class BodyFactory {
                         PADDEL;
                 break;
 
+            case FISH:
             case FISH2:
-                fixtureDef.density = 1;
+                fixtureDef.density = 75;
                 fixtureDef.restitution = 1;
                 fixtureDef.friction = 0f;
                 fixtureDef.filter.categoryBits = FISH;
@@ -229,7 +227,8 @@ public class BodyFactory {
                 break;
         }
 
-        bodyEditorLoader.attachFixture(body, region.getIdentifier(), fixtureDef, (float) reg.getRegionWidth(), (float) reg.getRegionHeight(), width, height, norm_scl);
+        float norm_scl = 1.0f / region.getRegionWidth();
+        bodyEditorLoader.attachFixture(body, regions.getIdentifier(), fixtureDef, (float) region.getRegionWidth(), (float) region.getRegionHeight(), width, height, norm_scl);
     }
 
     public World getWorld() {

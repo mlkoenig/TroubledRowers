@@ -7,8 +7,11 @@ import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.math.Vector2;
 import com.samb.trs.Components.FollowComponent;
 import com.samb.trs.Components.SteeringComponent;
+import com.samb.trs.Components.TypeComponent;
 import com.samb.trs.Utilities.Box2dAi.CustomPrioritySteering;
 import com.samb.trs.Utilities.Mappers;
+
+import static com.samb.trs.Components.TypeComponent.FISH;
 
 public class SteeringSystem extends IteratingSystem {
 
@@ -43,6 +46,7 @@ public class SteeringSystem extends IteratingSystem {
                 ((CustomPrioritySteering<Vector2>) steer.steeringBehavior).getPursue().setEnabled(false);
             }
         }
+
         steer.update(deltaTime);
     }
 }

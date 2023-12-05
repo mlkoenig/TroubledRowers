@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.samb.trs.Controllers.AssetController;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Controllers.RenderController;
@@ -23,7 +24,7 @@ import com.samb.trs.Resources.TextureRegions;
 public class GameHud extends Group implements UIElement, Updatable {
     private MainController mainController;
     private AssetController assetController;
-    private FitViewport viewport;
+    private Viewport viewport;
     private CollectIcon coinIcon, boostIcon;
     private ImageButton pauseButton, shieldButton;
     private Label scoreLabel;
@@ -53,8 +54,8 @@ public class GameHud extends Group implements UIElement, Updatable {
     private void initScore() {
         scoreLabel = new Label("0", assetController.getAsset(BitmapFonts.BOLD100, Color.WHITE));
         scoreLabel.setAlignment(Align.center);
-        scoreLabel.setPosition(RenderController.p2w(50),
-                RenderController.p2h(93.5f));
+        scoreLabel.setPosition(RenderController.wperc(50),
+                RenderController.hperc(93.5f) - safeHeight);
     }
 
     private void initIcons() {
@@ -63,21 +64,21 @@ public class GameHud extends Group implements UIElement, Updatable {
         this.boostIcon = new CollectIcon(mainController,
                 new TextureRegionDrawable(assetController.getAsset(TextureRegions.BOOST_ANZEIGE)));
 
-        coinIcon.setPosition(RenderController.p2w(62.5f),
-                RenderController.p2h(92) - safeHeight);
+        coinIcon.setPosition(RenderController.wperc(62.5f),
+                RenderController.hperc(92) - safeHeight);
 
-        boostIcon.setPosition(RenderController.p2w(80),
-                RenderController.p2h(92) - safeHeight);
+        boostIcon.setPosition(RenderController.wperc(80),
+                RenderController.hperc(92) - safeHeight);
     }
 
     private void initButtons() {
         this.pauseButton = new ImageButton(new TextureRegionDrawable(assetController.getAsset(TextureRegions.PAUSE_BUTTON)));
-        pauseButton.setBounds(RenderController.p2w(5), RenderController.p2h(92) + RenderController.p2w(3.5f),
-                RenderController.p2w(8), RenderController.p2w(8) - safeHeight);
+        pauseButton.setBounds(RenderController.wperc(5), RenderController.hperc(92) + RenderController.wperc(3.5f),
+                RenderController.wperc(8), RenderController.wperc(8) - safeHeight);
 
         this.shieldButton = new ImageButton(new TextureRegionDrawable(assetController.getAsset(TextureRegions.SHIELD_BUTTON)));
-        shieldButton.setBounds(RenderController.p2w(5), RenderController.p2w(5),
-                RenderController.p2w(25), RenderController.p2w(25) - safeHeight);
+        shieldButton.setBounds(RenderController.wperc(5), RenderController.wperc(5),
+                RenderController.wperc(25), RenderController.wperc(25));
     }
 
     private void addActors() {
@@ -119,5 +120,13 @@ public class GameHud extends Group implements UIElement, Updatable {
 
     public ImageButton getShieldButton() {
         return shieldButton;
+    }
+
+    public ImageButton getPauseButton() {
+        return pauseButton;
+    }
+
+    public Score getScore() {
+        return score;
     }
 }

@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.samb.trs.Resources.Constants.Collision.QUADRANT_BIT;
 import static com.samb.trs.Resources.Constants.Collision.ROCK_BIT;
-import static com.samb.trs.Resources.Constants.Rendering.PPM;
 
 public class Quadrant {
     private float x, y, width, height, initX, initY;
@@ -32,14 +31,14 @@ public class Quadrant {
 
     public void defineQuadrant(){
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(new Vector2((x + width / 2f) / PPM, (y + height / 2f) / PPM));
+        bodyDef.position.set(new Vector2((x + width / 2f), (y + height / 2f)));
         bodyDef.type = BodyDef.BodyType.StaticBody;
         body = world.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.isSensor = true;
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / PPM / 2, height / PPM / 2);
+        shape.setAsBox(0.5f * width, 0.5f * height);
         fixtureDef.shape = shape;
 
         fixtureDef.filter.maskBits = ROCK_BIT;
@@ -55,13 +54,13 @@ public class Quadrant {
             removed = true;
         }
 
-        body.setTransform(body.getPosition().x, (initY + getWidth() / 2 + viewport.getCamera().position.y) / PPM, body.getAngle());
+        body.setTransform(body.getPosition().x, (initY + 0.5f * getWidth() + viewport.getCamera().position.y), body.getAngle());
         y = initY+viewport.getCamera().position.y;
         overlapped = false;
     }
 
     public void draw(SpriteBatch batch, String s, BitmapFont font){
-        font.draw(batch, s, body.getPosition().x * PPM, body.getPosition().y * PPM);
+        font.draw(batch, s, body.getPosition().x, body.getPosition().y);
     }
 
     public boolean isOverlapped() {
@@ -116,8 +115,8 @@ public class Quadrant {
      * @return Center of the body in px
      */
     public Vector2 getCenter(){
-        if (!isRemoved()) return body.getPosition().scl(PPM);
-        return new Vector2(getX()+getWidth() / 2f, getY()+getHeight()/2f);
+        if (!isRemoved()) return body.getPosition();
+        return new Vector2(getX() + 0.5f * getWidth(), getY() + 0.5f * getHeight());
     }
 
     /**
@@ -125,6 +124,6 @@ public class Quadrant {
      */
     public Vector2 getWorldPosition(){
         if(!isRemoved()) return body.getPosition();
-        return new Vector2(getX() + getWidth() / 2f, getY() + getHeight() / 2f).scl(1f / PPM);
+        return new Vector2(getX() + 0.5f * getWidth(), getY() + 0.5f * getHeight());
     }
 }

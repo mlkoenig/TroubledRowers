@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.samb.trs.Systems.GameLogicSystem;
 import com.samb.trs.UI.GameOver.GameOverWindow;
 import com.samb.trs.UI.Hud.GameHud;
@@ -16,7 +17,7 @@ import com.samb.trs.Utilities.NullRunnable;
 
 public class UIController extends BaseController{
     private OrthographicCamera camera;
-    private FitViewport viewport;
+    private Viewport viewport;
     private Stage stage;
     private GameOverWindow gameOverWindow;
     private GameHud gameHud;
@@ -83,13 +84,20 @@ public class UIController extends BaseController{
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 getMain().getGameWorldController().getEventInputProcessor().setSpaceDown(true);
-                //if (player.isShielded()) account.increaseUsedShields();
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 getMain().getGameWorldController().getEventInputProcessor().setSpaceDown(false);
+            }
+        });
+
+        gameHud.getPauseButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                gameMenu.show(new NullRunnable());
             }
         });
     }

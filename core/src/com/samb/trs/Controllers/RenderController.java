@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Shaders;
 
@@ -22,7 +23,8 @@ import static com.samb.trs.Resources.Constants.Rendering.WorldWidth;
 public class RenderController extends BaseController{
 
     private final SpriteBatch batch;
-    private final FitViewport staticViewport, dynamicViewport;
+    private final FitViewport dynamicViewport;
+    private final ScreenViewport staticViewport;
     private final OrthographicCamera staticCamera, dynamicCamera;
     private final ShaderController shaderController;
     private final ShapeRenderer shapeRenderer;
@@ -37,7 +39,7 @@ public class RenderController extends BaseController{
         dynamicCamera = new OrthographicCamera();
         staticCamera = new OrthographicCamera();
         dynamicViewport = new FitViewport(Constants.Rendering.WorldWidth, Constants.Rendering.WorldHeight, dynamicCamera);
-        staticViewport = new FitViewport(Constants.Rendering.WorldWidth, Constants.Rendering.WorldHeight, staticCamera);
+        staticViewport = new ScreenViewport(staticCamera);
         this.stage = new Stage(staticViewport);
         box2DDebugRenderer = new Box2DDebugRenderer();
         shapeRenderer = new ShapeRenderer();
@@ -53,17 +55,25 @@ public class RenderController extends BaseController{
     }
 
     public void resize(int width, int height) {
-        Constants.Rendering.WorldHeight = Constants.Rendering.calculateHeight(width, height);
+        Constants.Rendering.WorldHeight = Constants.Rendering.calculateWorldHeight(width, height);
         staticViewport.update(width, height);
-        dynamicViewport.update(width, height);
+        dynamicViewport.update(WorldWidth, WorldHeight);
     }
 
-    public static float p2w(float percent) {
-        return WorldWidth * percent / 100f;
+    public static int w2w(float width) {
+        return (int) (width * (Gdx.graphics.getWidth() / WorldWidth));
     }
 
-    public static float p2h(float percent) {
-        return Constants.Rendering.WorldHeight * percent / 100f;
+    public static int w2h(float height) {
+        return (int) (height * (Gdx.graphics.getHeight() / WorldHeight));
+    }
+
+    public static float wperc (float p) {
+        return Gdx.graphics.getWidth() * p / 100.f;
+    }
+
+    public static float hperc (float p) {
+        return Gdx.graphics.getHeight() * p / 100.f;
     }
 
     /**
@@ -71,8 +81,8 @@ public class RenderController extends BaseController{
      *
      * @return virtual width
      */
-    public static float cpw() {
-        return WorldWidth / ((float) Gdx.graphics.getWidth());
+    public static float s2w(float width) {
+        return width * WorldWidth / ((float) Gdx.graphics.getWidth());
     }
 
     /**
@@ -80,8 +90,8 @@ public class RenderController extends BaseController{
      *
      * @return virtual height
      */
-    public static float cph() {
-        return Constants.Rendering.WorldHeight / ((float) Gdx.graphics.getHeight());
+    public static float s2h(float height) {
+        return height * WorldHeight / ((float) Gdx.graphics.getHeight());
     }
 
     public SpriteBatch getBatch() {
@@ -92,7 +102,7 @@ public class RenderController extends BaseController{
         return dynamicCamera;
     }
 
-    public FitViewport getStaticViewport() {
+    public ScreenViewport getStaticViewport() {
         return staticViewport;
     }
 

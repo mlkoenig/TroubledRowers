@@ -22,20 +22,20 @@ public class ParticleEffectSystem extends IteratingSystem {
             pec.timeTilDeath -= deltaTime;
         }
 
-//        if (Mappers.attached.has(entity)) {
-//            AttachedComponent ac = Mappers.attached.get(entity);
-//
-//            // Move PE if attached
-//            if (ac.isAttached && ac.attachedTo != null) {
-//                if (Mappers.transform.has(ac.attachedTo)) {
-//                    TransformComponent tca = Mappers.transform.get(ac.attachedTo);
-//                    pec.particleEffect.setPosition(
-//                            tca.position.x + ac.offset.x,
-//                            tca.position.y + ac.offset.y
-//                    );
-//                }
-//            }
-//        }
+        if (Mappers.attached.has(entity)) {
+            AttachedComponent ac = Mappers.attached.get(entity);
+
+            // Move PE if attached
+            if (ac != null && ac.isAttached && ac.attachedTo != null) {
+                if (Mappers.transform.has(ac.attachedTo)) {
+                    TransformComponent tca = Mappers.transform.get(ac.attachedTo);
+                    pec.particleEffect.setPosition(
+                            tca.position.x + ac.offset.x,
+                            tca.position.y + ac.offset.y
+                    );
+                }
+            }
+        }
 
         // free PE if completed
         if(pec.particleEffect.isComplete() || (pec.isDead && pec.timeTilDeath < 0)){

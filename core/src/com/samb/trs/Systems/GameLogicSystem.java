@@ -3,12 +3,16 @@ package com.samb.trs.Systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.Array;
 import com.samb.trs.Components.*;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Resources.Constants;
+import com.samb.trs.Resources.Musics;
 import com.samb.trs.Utilities.Mappers;
 import com.samb.trs.Utilities.NullRunnable;
+
+import java.util.Objects;
 
 public class GameLogicSystem extends IteratingSystem {
     private GameState gameState;
@@ -32,6 +36,9 @@ public class GameLogicSystem extends IteratingSystem {
         this.gameState = gameState;
         stateChange = true;
 
+        Music river_sound = mainController.getSoundController().getMusic(Musics.RIVER);
+        river_sound.setLooping(true);
+
         switch (gameState) {
             case PLAY:
                 getEngine().getSystem(GameOverSystem.class).setProcessing(true);
@@ -46,6 +53,9 @@ public class GameLogicSystem extends IteratingSystem {
                 getEngine().getSystem(SteeringSystem.class).setProcessing(true);
                 getEngine().getSystem(CollisionSystem.class).setProcessing(true);
                 getEngine().getSystem(RowingSystem.class).setProcessing(true);
+
+                if(!river_sound.isPlaying()) river_sound.play();
+
                 break;
             case PAUSE:
             case GAMEOVER:
@@ -69,6 +79,9 @@ public class GameLogicSystem extends IteratingSystem {
                 getEngine().getSystem(SteeringSystem.class).setProcessing(false);
                 getEngine().getSystem(CollisionSystem.class).setProcessing(false);
                 getEngine().getSystem(RowingSystem.class).setProcessing(false);
+
+                if(river_sound.isPlaying()) river_sound.stop();
+
                 break;
             case LOADING:
             case MENU:
@@ -84,6 +97,8 @@ public class GameLogicSystem extends IteratingSystem {
                 getEngine().getSystem(SteeringSystem.class).setProcessing(true);
                 getEngine().getSystem(CollisionSystem.class).setProcessing(true);
                 getEngine().getSystem(RowingSystem.class).setProcessing(false);
+
+                if(river_sound.isPlaying()) river_sound.pause();
                 break;
         }
 
@@ -107,10 +122,22 @@ public class GameLogicSystem extends IteratingSystem {
                 case PAUSE:
                 case GAMEOVER:
                     setPlayerVisible(true);
+                    mainController.getSaveController().getAccount().increaseGamesPlayed();
+                    mainController.getSaveController().saveGameState();
                     break;
             }
             stateChange = false;
         }
+
+        if (gameState == GameState.PLAY) {
+            mainController.getGameWorldController().getScore().update(deltaTime);
+            mainController.getUiController().getGameHud().update(deltaTime);
+        } else if(gameState == GameState.GAMEOVER) {
+            mainController.getUiController().getGameOverWindow().update();
+        }
+
+        // Play sounds
+        mainController.getSoundController().playSoundQueue();
     }
 
     private void setPlayerVisible(boolean visible) {

@@ -6,7 +6,6 @@ import com.samb.trs.Controllers.MainController;
 import java.io.Serializable;
 
 public class Score implements Serializable {
-    private static final long serialVersionUID = 6416505909906311271L;
     private MainController mainController;
     private long score;
     private int boosts;
@@ -36,6 +35,7 @@ public class Score implements Serializable {
 
     public void increaseBoosts(){
         boosts++;
+        mainController.getSaveController().getAccount().increaseCollectedBoosts();
     }
 
     public void increaseCollectedCoins(){

@@ -34,9 +34,6 @@ public class BodyEditorLoader {
     private final CircleShape circleShape = new CircleShape();
     private final Vector2 vec = new Vector2();
 
-    //
-    private static final float PPM = Constants.Rendering.PPM;
-
     // -------------------------------------------------------------------------
     // Ctors
     // -------------------------------------------------------------------------
@@ -225,7 +222,7 @@ public class BodyEditorLoader {
     }
 
     private float transformX(float x, float width) {
-        return (x * width - width / 2) / PPM;
+        return (x * width - width / 2);
     }
 
     /**
@@ -238,7 +235,7 @@ public class BodyEditorLoader {
     }
 
     private float transformY(float y, float origWidth, float origHeight, float height) {
-        return (y * height * (origWidth / origHeight) - height / 2) / PPM;
+        return (y * height * (origWidth / origHeight) - height / 2);
     }
 
     /**

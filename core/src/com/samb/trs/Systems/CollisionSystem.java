@@ -7,24 +7,18 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.samb.trs.Components.CollisionComponent;
+import com.samb.trs.Components.DeathComponent;
 import com.samb.trs.Components.TextureComponent;
-import com.samb.trs.Components.TransformComponent;
 import com.samb.trs.Components.TypeComponent;
 import com.samb.trs.Controllers.MainController;
-import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Factories.EntityFactory;
 import com.samb.trs.Model.Score;
-import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Particles;
 import com.samb.trs.Resources.Sounds;
 import com.samb.trs.Utilities.Mappers;
 
-import javax.swing.*;
-
 import static com.samb.trs.Components.TypeComponent.*;
 import static com.samb.trs.Factories.EntityFactory.compare;
-import static com.samb.trs.Resources.Constants.Rendering.PPM;
-import static com.samb.trs.Resources.Constants.Rendering.PPM_INV;
 import static com.samb.trs.Resources.Constants.Collision.BOOST_PROBABILITY;
 
 public class CollisionSystem extends IteratingSystem {
@@ -52,7 +46,6 @@ public class CollisionSystem extends IteratingSystem {
                 Body body2;
 
                 Vector2 contactPoint = cc.contact.getWorldManifold().getPoints()[0];
-
                 Entity first, second;
 
                 EntityFactory entityFactory = getEngine().getSystem(SpawnSystem.class).getEntityFactory();
@@ -63,10 +56,12 @@ public class CollisionSystem extends IteratingSystem {
                     case BOAT | SHORE:
                     case BOAT | TRUNK:
                         first = tc.type == BOAT ? entity : collidedEntity;
+
                         if (!Mappers.shield.get(first).isProtected) {
-                            //mainController.getSoundController().queueSound(first, Sounds.CRASH);
+                            mainController.getSoundController().queueSound(first, Sounds.CRASH);
                             getEngine().getSystem(GameOverSystem.class).gameOver();
                         }
+
                         break;
                     case ROCK:
                         first = entity;
@@ -189,12 +184,29 @@ public class CollisionSystem extends IteratingSystem {
                     case FISH | TRUNK:
                     case FISH | SHORE:
                         first = tc.type == FISH ? entity : collidedEntity;
+                        second = tc.type == FISH ? collidedEntity : entity;
 
-                        //Mappers.death.get(first).isDead = true;
+                        DeathComponent dc = Mappers.death.get(first);
 
-                        //entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x * PPM, contactPoint.y * PPM);
+                        // Compare velocities
+                        Vector2 v1 = Mappers.body.get(first).body.getLinearVelocity();
+                        Vector2 v2 = Mappers.body.get(second).body.getLinearVelocity();
 
-                        mainController.getSoundController().queueSound(first, Sounds.SPLASH);
+                        // Fish is dead if the other entity collides face-to-face and fish has a lower speed
+                        // or if the fish is hit from behind
+
+                        Mappers.body.get(first).contact = contactPoint.cpy();
+
+                        Vector2 contactVec = contactPoint.cpy().sub(Mappers.body.get(first).body.getPosition());
+                        float cos = v1.dot(contactVec);
+
+                        dc.isDead = dc.isDead || cos <= 0 || (cos > 0 && v2.len2() > v1.len2());
+
+                        if (dc.isDead) {
+                            entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x, contactPoint.y);
+                            mainController.getSoundController().queueSound(first, Sounds.SPLASH);
+                        }
+
                         break;
                     case FISH | SHIELD:
                         first = tc.type == FISH ? entity : collidedEntity;
@@ -202,7 +214,7 @@ public class CollisionSystem extends IteratingSystem {
 
                         if (Mappers.shield.get(Mappers.attached.get(second).attachedTo).isProtected) {
                             Mappers.death.get(first).isDead = true;
-                            entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x * PPM, contactPoint.y * PPM);
+                            entityFactory.makeParticleEffect(Particles.FISH, contactPoint.x, contactPoint.y);
                             mainController.getSoundController().queueSound(first, Sounds.SPLASH);
                         }
                         break;
@@ -216,6 +228,7 @@ public class CollisionSystem extends IteratingSystem {
     }
 
     private void removeEntityAndSpawnCollectEntity(EntityFactory entityFactory, Entity entity) {
+
         Vector2 pos = Mappers.transform.get(entity).position;
 
         float rand = MathUtils.random();
@@ -226,10 +239,6 @@ public class CollisionSystem extends IteratingSystem {
         else
             e = entityFactory.makeBoostEntity(pos.x, pos.y, mainController.getRenderController().getDynamicViewport());
         EntityFactory.copyVelocity(entity, e);
-
-//        entity.remove(BodyComponent.class);
-//        entity.remove(TextureComponent.class);
-//        getEngine().removeEntity(entity);
         Mappers.death.get(entity).isDead = true;
 
         getEngine().addEntity(e);

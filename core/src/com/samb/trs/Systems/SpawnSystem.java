@@ -13,6 +13,7 @@ import com.samb.trs.Components.BodyComponent;
 import com.samb.trs.Components.QuadrantComponent;
 import com.samb.trs.Components.SteeringComponent;
 import com.samb.trs.Components.TextureComponent;
+import com.samb.trs.Components.TransformComponent;
 import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Controllers.Spawning.Patterns.Pattern;
 import com.samb.trs.Controllers.Spawning.Patterns.Patterns;
@@ -104,7 +105,7 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         quadrants = new Array<>();
         for (int i = 0; i < vertical; i++) {
             for (int j = 0; j < horizontal; j++) {
-                float x = 230;
+                float x = 1.5f;
                 float quad_width = (WorldWidth - 2 * x) / (float) (horizontal);
                 Entity quadrant = entityFactory.makeQuadrantEntity(cameraEntity, -WorldWidth / 2f + x + (j + 0.5f) * quad_width, 200 + WorldHeight / 2f + i * quad_width, quad_width, quad_width);
                 engine.addEntity(quadrant);
@@ -154,17 +155,18 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         BodyComponent bc = Mappers.body.get(q);
         com.samb.trs.Components.QuadrantComponent qc = Mappers.quadrant.get(q);
 
-        float qx = bc.body.getPosition().x * Rendering.PPM;
-        float qy = bc.body.getPosition().y * Rendering.PPM;
+        float qx = bc.body.getPosition().x;
+        float qy = bc.body.getPosition().y;
 
-        float x = random(qx - qc.width / 2f + 100, qx + qc.width / 2f - 100);
-        float y = random(qy - qc.height / 2f + 80, qy + qc.height / 2f - 80);
+        float x = random(qx - qc.width / 2f + 0.75f, qx + qc.width / 2f - 0.75f);
+        float y = random(qy - qc.height / 2f + 0.7f, qy + qc.height / 2f - 0.7f);
 
         Entity fish = entityFactory.makeFishEntity(x, y, viewport);
 
         SteeringComponent stc = Mappers.steering.get(fish);
         stc.currentMode = SteeringComponent.SteeringState.WANDER;
         CustomPrioritySteering<Vector2> steering;
+
         if (player != null && Mappers.steering.has(player)) {
             steering = new CustomPrioritySteering<>(stc, Mappers.steering.get(player));
             steering.add(SteeringPresets.getPursue(stc, steering.getPlayer()).setEnabled(false));
@@ -172,18 +174,20 @@ public class SpawnSystem extends EntitySystem implements Disposable {
             steering = new CustomPrioritySteering<>(stc, null);
         }
         steering.setEpsilon(0.0001f);
-        steering.add(SteeringPresets.getCollisionAvoidance(stc, world, 3));
+        //steering.add(SteeringPresets.getCollisionAvoidance(stc, world, 6f));
         steering.add(SteeringPresets.getRayCastObstacleAvoidance(stc, world, 2));
         steering.add(SteeringPresets.getWander(stc));
         stc.steeringBehavior = steering;
-        stc.setMaxLinearSpeed(13);
-        stc.setMaxLinearAcceleration(10);
-        stc.setMaxAngularAcceleration(20);
-        stc.setMaxAngularSpeed(20);
+
+        stc.setMaxLinearSpeed(250);
+        stc.setMaxLinearAcceleration(80);
+
+        stc.setMaxAngularSpeed(100);
+        stc.setMaxAngularAcceleration(100);
         entityFactory.makeFollowEntity(fish, 2.6f);
 
         engine.addEntity(fish);
-        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, fish, 0, 0, 0, 40, 40, 0);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, fish, 0, 0, 0, 0.22f, 0.22f, 0);
     }
 
     private void spawnCoinInQuadrant(Entity q) {
@@ -191,8 +195,8 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         BodyComponent bc = Mappers.body.get(q);
         com.samb.trs.Components.QuadrantComponent qc = Mappers.quadrant.get(q);
 
-        float qx = bc.body.getPosition().x * Rendering.PPM;
-        float qy = bc.body.getPosition().y * Rendering.PPM;
+        float qx = bc.body.getPosition().x;
+        float qy = bc.body.getPosition().y;
 
         float x = random(qx - qc.width / 2f + 25, qx + qc.width / 2f - 25);
         float y = random(qy - qc.height / 2f + 25, qy + qc.height / 2f - 25);
@@ -201,15 +205,15 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         engine.addEntity(coin);
 
         TextureComponent tc = Mappers.texture.get(coin);
-        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, coin, 0, 0, 0, tc.width - 10, tc.height - 10, 0);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, coin, 0, 0, 0, tc.width - 0.01f, tc.height - 0.01f, 0);
     }
 
     private void spawnBoostInQuadrant(Entity q) {
         BodyComponent bc = Mappers.body.get(q);
         com.samb.trs.Components.QuadrantComponent qc = Mappers.quadrant.get(q);
 
-        float qx = bc.body.getPosition().x * Rendering.PPM;
-        float qy = bc.body.getPosition().y * Rendering.PPM;
+        float qx = bc.body.getPosition().x;
+        float qy = bc.body.getPosition().y;
 
         // Coin position
         float x = random(qx - qc.width / 2f + 25, qx + qc.width / 2f - 25);
@@ -226,8 +230,8 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         BodyComponent bc = Mappers.body.get(q);
         QuadrantComponent qc = Mappers.quadrant.get(q);
 
-        float qx = bc.body.getPosition().x * Rendering.PPM;
-        float qy = bc.body.getPosition().y * Rendering.PPM;
+        float qx = bc.body.getPosition().x;
+        float qy = bc.body.getPosition().y;
 
         // Rock position
         float x = random(qx - qc.width / 2f + 125, qx + qc.width / 2f - 125);
@@ -265,8 +269,8 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         BodyComponent bc = Mappers.body.get(q);
         QuadrantComponent qc = Mappers.quadrant.get(q);
 
-        float qx = bc.body.getPosition().x * Rendering.PPM;
-        float qy = bc.body.getPosition().y * Rendering.PPM;
+        float qx = bc.body.getPosition().x;
+        float qy = bc.body.getPosition().y;
 
         // Rock position
         float x = random(qx - qc.width / 2f + 150, qx + qc.width / 2f - 150);

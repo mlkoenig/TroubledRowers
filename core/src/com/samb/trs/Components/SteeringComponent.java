@@ -4,30 +4,30 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
+import com.badlogic.gdx.ai.steer.behaviors.Wander;
 import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool;
 import com.samb.trs.Utilities.Box2dAi.Box2dLocation;
 import com.samb.trs.Utilities.Box2dAi.Box2dSteeringUtils;
+import com.samb.trs.Utilities.Box2dAi.CustomPrioritySteering;
 
 public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Poolable {
 
-    private static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2()); // this is the actual steering vector for our unit
-    public SteeringState currentMode = SteeringState.NONE;    // stores which state the entity is currently in
-    public Body body;    // stores a reference to our Box2D body
+    private static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
+    public SteeringState currentMode = SteeringState.NONE;
+    public Body body;
     public float orientationOffset;
-    // target location. This will cause problems as our entities travel pretty fast and can easily over or undershoot this.)
-    public SteeringBehavior<Vector2> steeringBehavior; // stores the action behaviour
-    public float boundingRadius = 1f;   // the minimum radius size for a circle required to cover whole object
-    // Steering data
-    float maxLinearSpeed = 2f;    // stores the max speed the entity can go
-    float maxLinearAcceleration = 5f;    // stores the max acceleration
-    float maxAngularSpeed = 50f;        // the max turning speed
-    float maxAngularAcceleration = 5f;// the max turning acceleration
-    float zeroThreshold = 0.1f;    // how accurate should checks be (0.0000001f will mean the entity must get within 0.0000001f of
-    private boolean tagged = true;        // This is a generic flag utilized in a variety of ways. (never used this myself)
-    private boolean independentFacing = false; // defines if the entity can move in a direction other than the way it faces
+    public SteeringBehavior<Vector2> steeringBehavior;
+    public float boundingRadius = 1f;
+    float maxLinearSpeed = 2f;
+    float maxLinearAcceleration = 5f;
+    float maxAngularSpeed = 5f;
+    float maxAngularAcceleration = 5f;
+    float zeroThreshold = 0.1f;
+    private boolean tagged = true;
+    private boolean independentFacing = false;
 
     @Override
     public void reset() {
@@ -36,7 +36,6 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
         orientationOffset = 0;
         steeringBehavior = null;
         independentFacing = false;
-
     }
 
     public boolean isIndependentFacing() {
@@ -47,25 +46,14 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
         this.independentFacing = independentFacing;
     }
 
-    /**
-     * Call this to update the steering behaviour (per frame)
-     *
-     * @param delta delta time between frames
-     */
-    public void update(float delta) {
+    public void update(float deltaTime) {
         if (steeringBehavior != null) {
             steeringBehavior.calculateSteering(steeringOutput);
-            applySteering(steeringOutput, delta);
+            applySteering(steeringOutput, deltaTime);
         }
     }
 
-    /**
-     * apply steering to the Box2d body
-     *
-     * @param steering  the steering vector
-     * @param deltaTime teh delta time
-     */
-    protected void applySteering(SteeringAcceleration<Vector2> steering, float deltaTime) {
+    protected void applySteering (SteeringAcceleration<Vector2> steering, float deltaTime) {
         boolean anyAccelerations = false;
 
         // Update position and linear velocity.
@@ -88,7 +76,7 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
             if (!linVel.isZero(getZeroLinearSpeedThreshold())) {
                 float newOrientation = vectorToAngle(linVel);
                 body.setAngularVelocity((newOrientation - getAngularVelocity()) * deltaTime); // this is superfluous if independentFacing is always true
-                setOrientation(newOrientation);
+                body.setTransform(body.getPosition(), newOrientation + orientationOffset);
             }
         }
 
@@ -98,7 +86,7 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
             float currentSpeedSquare = velocity.len2();
             float maxLinearSpeed = getMaxLinearSpeed();
             if (currentSpeedSquare > (maxLinearSpeed * maxLinearSpeed)) {
-                body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float) Math.sqrt(currentSpeedSquare)));
+                body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float)Math.sqrt(currentSpeedSquare)));
             }
             // Cap the angular speed
             float maxAngVelocity = getMaxAngularSpeed();
@@ -213,5 +201,5 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
         this.tagged = tagged;
     }
 
-    public enum SteeringState {WANDER, SEEK, FLEE, ARRIVE, CUSTOM, NONE}    // a list of possible behaviours
+    public enum SteeringState {WANDER, SEEK, FLEE, ARRIVE, CUSTOM, NONE}
 }

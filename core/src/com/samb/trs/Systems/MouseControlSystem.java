@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.samb.trs.Components.MouseComponent;
 import com.samb.trs.Components.TextureComponent;
 import com.samb.trs.Controllers.MainController;
+import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Utilities.Mappers;
 
@@ -42,22 +43,22 @@ public class MouseControlSystem extends IteratingSystem {
         for (Entity entity : entityQueue) {
             MouseComponent mc = Mappers.mouse.get(entity);
             TextureComponent tc = Mappers.texture.get(entity);
-            if (eip.getTarget().y + mc.offset.y >= (camera.position.y - Constants.Rendering.WorldHeight / 2f + tc.height / 2f) / Constants.Rendering.PPM) {
+            if (eip.getTarget().y + mc.offset.y >= (camera.position.y - Constants.Rendering.WorldHeight / 2f + tc.height / 2f)) {
                 mc.mouseJoint.setTarget(eip.getTarget().add(mc.offset));
                 eip.getTarget().sub(mc.offset);
             } else {
                 float x = eip.getTarget().x + mc.offset.x;
-                mc.mouseJoint.setTarget(eip.getTarget().set(x, (camera.position.y - Constants.Rendering.WorldHeight / 2f + tc.height / 2f) / Constants.Rendering.PPM));
+                mc.mouseJoint.setTarget(eip.getTarget().set(x, (camera.position.y - Constants.Rendering.WorldHeight / 2f + tc.height / 2f)));
                 eip.getTarget().sub(mc.offset.x, 0);
                 mc.offset.set(mc.offset.x, 0);
             }
 
-            if (eip.getTarget().y + mc.offset.y <= (camera.position.y + Constants.Rendering.WorldHeight / 2f - tc.height / 2f) / Constants.Rendering.PPM) {
+            if (eip.getTarget().y + mc.offset.y <= (camera.position.y + Constants.Rendering.WorldHeight / 2f - tc.height / 2f)) {
                 mc.mouseJoint.setTarget(eip.getTarget().add(mc.offset));
                 eip.getTarget().sub(mc.offset);
             } else {
                 float x = eip.getTarget().x + mc.offset.x;
-                mc.mouseJoint.setTarget(eip.getTarget().set(x, (camera.position.y + Constants.Rendering.WorldHeight / 2f - tc.height / 2f) / Constants.Rendering.PPM));
+                mc.mouseJoint.setTarget(eip.getTarget().set(x, (camera.position.y + Constants.Rendering.WorldHeight / 2f - tc.height / 2f)));
                 eip.getTarget().sub(mc.offset.x, 0);
                 mc.offset.set(mc.offset.x, 0);
             }
@@ -69,6 +70,6 @@ public class MouseControlSystem extends IteratingSystem {
     private Vector2 getMouseTarget() {
         Vector3 input = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
         input = camera.unproject(input, viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        return new Vector2(input.x / Constants.Rendering.PPM, input.y / Constants.Rendering.PPM);
+        return new Vector2(RenderController.s2w(input.x), RenderController.s2w(input.y));
     }
 }

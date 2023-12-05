@@ -19,7 +19,7 @@ public class CollectIcon extends Table {
 
         setBackground(drawable);
         add(label).padLeft(120);
-        setSize(RenderController.p2w(15), RenderController.p2w(15));
+        setSize(RenderController.wperc(15), RenderController.wperc(15));
     }
 
     public void setCount(int i) {

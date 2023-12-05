@@ -47,6 +47,11 @@ public class GameOverWindow extends UIWindowStandard {
         scoreTable.add(highScoreLabel);
     }
 
+    public void update() {
+        this.scoreLabel.setText(String.valueOf(mainController.getGameWorldController().getScore().getScore()));
+        this.highScoreLabel.setText("Best: " + mainController.getSaveController().getAccount().getHighScore());
+    }
+
     private void initStyles(){
         this.scoreStyle = assets.getAsset(BitmapFonts.SCORE, labelColor);
         this.bold50Style = assets.getAsset(BitmapFonts.BOLD50, labelColor);
@@ -55,14 +60,14 @@ public class GameOverWindow extends UIWindowStandard {
 
     private void addActors(){
         add(scoreTable).row();
-        add(separator).width(Constants.Rendering.WorldWidth * 0.9f - stage.getWidth()*0.25f)
-                .padTop(RenderController.p2h(2.5f))
+        add(separator).width(Constants.Rendering.WorldWidth * 0.9f - stage.getWidth() * 0.25f)
+                .padTop(RenderController.hperc(2.5f))
                 .row();
-        add(scoreBoard).padLeft(RenderController.p2w(5))
-                .padRight(RenderController.p2w(5))
-                .padTop(RenderController.p2h(2.5f))
+        add(scoreBoard).padLeft(RenderController.wperc(5))
+                .padRight(RenderController.wperc(5))
+                .padTop(RenderController.hperc(2.5f))
                 .row();
-        add(buttonTable).padTop(RenderController.p2h(5));
+        add(buttonTable).padTop(RenderController.hperc(5));
     }
 
     public Label getScoreLabel() {

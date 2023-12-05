@@ -21,8 +21,8 @@ public class ShoreSystem extends IteratingSystem {
     public void update(float deltaTime) {
         super.update(deltaTime);
         for (BodyComponent bc : bodyComponents) {
-            if (bc.body.getPosition().y <= (-Constants.Rendering.WorldHeight + getEngine().getSystem(CameraSystem.class).getCamera().position.y) / Constants.Rendering.PPM) {
-                bc.body.setTransform(bc.body.getPosition().x, bc.body.getPosition().y + Constants.Rendering.WorldHeight * 2 / Constants.Rendering.PPM, bc.body.getAngle());
+            if (bc.body.getPosition().y <= (-Constants.Rendering.WorldHeight + getEngine().getSystem(CameraSystem.class).getCamera().position.y)) {
+                bc.body.setTransform(bc.body.getPosition().x, bc.body.getPosition().y + Constants.Rendering.WorldHeight * 2, bc.body.getAngle());
             }
         }
         bodyComponents.clear();

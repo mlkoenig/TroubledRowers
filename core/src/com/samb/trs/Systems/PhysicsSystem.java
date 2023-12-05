@@ -12,9 +12,9 @@ import com.samb.trs.Components.TransformComponent;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Utilities.Mappers;
 
-public class PhysicsSystem extends IteratingSystem {
+import static com.samb.trs.Resources.Constants.Rendering.TIMESTEP;
 
-    private static final float MAX_STEP_TIME = 1 / 60f;
+public class PhysicsSystem extends IteratingSystem {
     private static float accumulator = 0f;
 
     private World world;
@@ -32,9 +32,9 @@ public class PhysicsSystem extends IteratingSystem {
         super.update(deltaTime);
         float frameTime = Math.min(deltaTime, 0.25f);
         accumulator += frameTime;
-        if (accumulator >= MAX_STEP_TIME) {
-            world.step(MAX_STEP_TIME, 12, 6);
-            accumulator -= MAX_STEP_TIME;
+        if (accumulator >= TIMESTEP) {
+            world.step(TIMESTEP, 30, 60);
+            accumulator -= TIMESTEP;
 
             //Entity Queue
             for (Entity entity : bodiesQueue) {
@@ -42,8 +42,8 @@ public class PhysicsSystem extends IteratingSystem {
                 BodyComponent bodyComp = Mappers.body.get(entity);
                 if (bodyComp.body != null) {
                     Vector2 position = bodyComp.body.getPosition();
-                    tfm.position.x = position.x * Constants.Rendering.PPM;
-                    tfm.position.y = position.y * Constants.Rendering.PPM;
+                    tfm.position.x = position.x;
+                    tfm.position.y = position.y;
                     tfm.rotation = bodyComp.body.getAngle() * MathUtils.radiansToDegrees;
 
                     // Update Body values in case the body is already removed

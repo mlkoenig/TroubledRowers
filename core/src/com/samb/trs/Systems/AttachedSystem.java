@@ -1,7 +1,6 @@
 package com.samb.trs.Systems;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
@@ -10,12 +9,8 @@ import com.samb.trs.Components.AttachedComponent;
 import com.samb.trs.Components.BodyComponent;
 import com.samb.trs.Components.ParticleEffectComponent;
 import com.samb.trs.Components.TransformComponent;
-import com.samb.trs.Controllers.AttachedController;
-import com.samb.trs.Controllers.MainController;
 import com.samb.trs.Resources.Constants;
 import com.samb.trs.Utilities.Mappers;
-
-import javax.xml.crypto.dsig.Transform;
 
 public class AttachedSystem extends IteratingSystem {
 
@@ -40,8 +35,8 @@ public class AttachedSystem extends IteratingSystem {
             if (Mappers.body.has(ac.attachedTo)) {
                 BodyComponent bc = Mappers.body.get(ac.attachedTo);
                 bodyComp.body.setTransform(
-                        bc.body.getPosition().x + ac.offset.x * Constants.Rendering.PPM_INV,
-                        bc.body.getPosition().y + ac.offset.y * Constants.Rendering.PPM_INV,
+                        bc.body.getPosition().x + ac.offset.x,
+                        bc.body.getPosition().y + ac.offset.y,
                         bodyComp.body.getAngle()
                 );
                 bodyComp.body.setLinearVelocity(bc.body.getLinearVelocity());
@@ -51,8 +46,8 @@ public class AttachedSystem extends IteratingSystem {
             } else if(Mappers.transform.has(ac.attachedTo)) {
                 TransformComponent tc = Mappers.transform.get(ac.attachedTo);
                 bodyComp.body.setTransform(
-                        (tc.position.x + ac.offset.x) * Constants.Rendering.PPM_INV,
-                        (tc.position.y + ac.offset.y) * Constants.Rendering.PPM_INV,
+                        (tc.position.x + ac.offset.x),
+                        (tc.position.y + ac.offset.y),
                         bodyComp.body.getAngle()
                 );
             }
@@ -65,8 +60,8 @@ public class AttachedSystem extends IteratingSystem {
             if (Mappers.body.has(ac.attachedTo)) {
                 BodyComponent bc = Mappers.body.get(ac.attachedTo);
                 transformComponent.position.set(
-                        bc.body.getPosition().x * Constants.Rendering.PPM + ac.offset.x,
-                        bc.body.getPosition().y * Constants.Rendering.PPM + ac.offset.y
+                        bc.body.getPosition().x + ac.offset.x,
+                        bc.body.getPosition().y + ac.offset.y
                 );
             } else if (Mappers.transform.has(ac.attachedTo)) {
                 TransformComponent tc = Mappers.transform.get(ac.attachedTo);
@@ -84,8 +79,8 @@ public class AttachedSystem extends IteratingSystem {
             if (Mappers.body.has(ac.attachedTo)) {
                 BodyComponent bc = Mappers.body.get(ac.attachedTo);
                 pec.particleEffect.setPosition(
-                        bc.body.getPosition().x * Constants.Rendering.PPM + ac.offset.x,
-                        bc.body.getPosition().y * Constants.Rendering.PPM+ ac.offset.y
+                        bc.body.getPosition().x + ac.offset.x,
+                        bc.body.getPosition().y + ac.offset.y
                 );
             } else if (Mappers.transform.has(ac.attachedTo)) {
                 TransformComponent tc = Mappers.transform.get(ac.attachedTo);

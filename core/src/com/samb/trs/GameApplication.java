@@ -11,7 +11,6 @@ import com.samb.trs.Resources.Constants;
 public class GameApplication implements ApplicationListener {
 	private MainController mainController;
 	private GLProfiler glProfiler;
-	private float drawCalls, textureBinds, fps, shaderSwitches;
 
 	
 	@Override
@@ -30,16 +29,6 @@ public class GameApplication implements ApplicationListener {
 	public void render () {
 		glProfiler.reset();
 		mainController.getRenderController().render(Gdx.graphics.getDeltaTime());
-		drawCalls = glProfiler.getDrawCalls();
-		textureBinds = glProfiler.getTextureBindings();
-		fps = Gdx.graphics.getFramesPerSecond();
-		shaderSwitches = glProfiler.getShaderSwitches();
-
-//		if (Constants.General.DEBUGGING)
-//			System.out.println("DrawCalls: " + drawCalls +
-//					"\n TextureBinds: " + textureBinds +
-//					"\n ShaderSwitches: " + shaderSwitches +
-//					"\n FPS: " + fps);
 	}
 
 	@Override

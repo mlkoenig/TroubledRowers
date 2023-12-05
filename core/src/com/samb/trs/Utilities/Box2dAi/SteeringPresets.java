@@ -16,10 +16,10 @@ public class SteeringPresets {
 
     public static Wander<Vector2> getWander(Steerable<Vector2> scom) {
         Wander<Vector2> wander = new Wander<Vector2>(scom)
-                .setFaceEnabled(false)
-                .setWanderOffset(5)
-                .setWanderOrientation(0)
-                .setWanderRadius(3)
+                .setFaceEnabled(false) // let wander behaviour manage facing
+                .setWanderOffset(0f) // distance away from entity to set target
+                .setWanderOrientation(0f) // the initial orientation
+                .setWanderRadius(1f) // size of target
                 .setWanderRate(MathUtils.PI2 * 2);
         return wander;
     }
@@ -53,13 +53,14 @@ public class SteeringPresets {
     }
 
     public static RaycastObstacleAvoidance<Vector2> getRayCastObstacleAvoidance(Steerable<Vector2> owner, World world, int rayConfigurationIndex) {
+        float ray_length = 2.5f;
         @SuppressWarnings("unchecked")
         RayConfigurationBase<Vector2>[] localRayConfigurations = new RayConfigurationBase[] {
-                new SingleRayConfiguration<Vector2>(owner, 50),
-                new ParallelSideRayConfiguration<Vector2>(owner, 50, owner.getBoundingRadius()),
-                new CentralRayWithWhiskersConfiguration<Vector2>(owner, 50, 25, 35 * MathUtils.degreesToRadians)};
+                new SingleRayConfiguration<Vector2>(owner, ray_length),
+                new ParallelSideRayConfiguration<Vector2>(owner, ray_length, owner.getBoundingRadius()),
+                new CentralRayWithWhiskersConfiguration<Vector2>(owner, ray_length, 0.5f * ray_length, 35 * MathUtils.degreesToRadians)};
         RaycastCollisionDetector<Vector2> raycastCollisionDetector = new Box2dRaycastCollisionDetector(world);
         return new RaycastObstacleAvoidance<Vector2>(owner, localRayConfigurations[rayConfigurationIndex],
-                raycastCollisionDetector, 4);
+                raycastCollisionDetector, 0.3f * ray_length);
     }
 }

@@ -35,7 +35,7 @@ public class CameraSystem extends IteratingSystem {
         BodyComponent bodyComponent = Mappers.body.get(cameraEntity);
         bodyComponent.body.setLinearVelocity(0, velocity);
         float y = camera.position.y;
-        camera.position.set(bodyComponent.body.getPosition().x * Rendering.PPM, bodyComponent.body.getPosition().y * Rendering.PPM, 0);
+        camera.position.set(bodyComponent.body.getPosition().x, bodyComponent.body.getPosition().y, 0);
         diff = camera.position.y - y;
     }
 
