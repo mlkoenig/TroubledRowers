@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Taken and modified from box-2d-editor | https://github.com/julienvillegas/box2d-editor
+ * Author: davebaol | https://github.com/davebaol and Aurelien
+ *         Ribon | http://www.aurelienribon.com
+ ******************************************************************************/
+
 package aurelienribon.bodyeditor;
 
 import com.badlogic.gdx.files.FileHandle;
@@ -9,7 +15,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.samb.trs.Resources.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
