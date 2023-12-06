@@ -18,11 +18,21 @@ public class CollectIcon extends Table {
         label.setAlignment(Align.right);
 
         setBackground(drawable);
-        add(label).padLeft(120);
+        add(label).padLeft(RenderController.wperc(8));
         setSize(RenderController.wperc(15), RenderController.wperc(15));
     }
 
     public void setCount(int i) {
         label.setText(i);
+    }
+
+    @Override
+    public void setBounds(float x, float y, float width, float height) {
+        super.setBounds(x, y - height * 0.275f, width, height);
+    }
+
+    @Override
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y - getHeight() * 0.275f);
     }
 }

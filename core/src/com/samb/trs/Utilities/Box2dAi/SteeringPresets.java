@@ -16,11 +16,11 @@ public class SteeringPresets {
 
     public static Wander<Vector2> getWander(Steerable<Vector2> scom) {
         Wander<Vector2> wander = new Wander<Vector2>(scom)
-                .setFaceEnabled(false) // let wander behaviour manage facing
-                .setWanderOffset(0f) // distance away from entity to set target
-                .setWanderOrientation(0f) // the initial orientation
-                .setWanderRadius(1f) // size of target
-                .setWanderRate(MathUtils.PI2 * 2);
+                .setFaceEnabled(false)
+                .setWanderOffset(0.0f)
+                .setWanderOrientation(0f)
+                .setWanderRadius(8.0f)
+                .setWanderRate(MathUtils.PI2 * 0.3f);
         return wander;
     }
 
@@ -36,8 +36,8 @@ public class SteeringPresets {
 
     public static Arrive<Vector2> getArrive(Steerable<Vector2> runner, Location<Vector2> target) {
         Arrive<Vector2> arrive = new Arrive<>(runner, target)
-                .setTimeToTarget(0.1f) // default 0.1f
-                .setArrivalTolerance(7f) //
+                .setTimeToTarget(0.1f)
+                .setArrivalTolerance(7f)
                 .setDecelerationRadius(10f);
 
         return arrive;
@@ -53,7 +53,7 @@ public class SteeringPresets {
     }
 
     public static RaycastObstacleAvoidance<Vector2> getRayCastObstacleAvoidance(Steerable<Vector2> owner, World world, int rayConfigurationIndex) {
-        float ray_length = 2.5f;
+        float ray_length = 0.5f;
         @SuppressWarnings("unchecked")
         RayConfigurationBase<Vector2>[] localRayConfigurations = new RayConfigurationBase[] {
                 new SingleRayConfiguration<Vector2>(owner, ray_length),

@@ -3,7 +3,6 @@ package com.samb.trs.Factories;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.*;
 import com.samb.trs.Controllers.MainController;
-import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.TextureRegions;
 import com.samb.trs.Utilities.BodyEditorLoader;
 

@@ -28,6 +28,7 @@ import com.samb.trs.Utilities.Mappers;
 
 import static com.badlogic.gdx.math.MathUtils.degRad;
 import static com.badlogic.gdx.math.MathUtils.random;
+import static com.samb.trs.Resources.Constants.Rendering.TIMESTEP;
 import static com.samb.trs.Resources.Constants.Rendering.WorldHeight;
 import static com.samb.trs.Resources.Constants.Rendering.WorldWidth;
 import static com.samb.trs.Resources.Constants.*;
@@ -105,9 +106,9 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         quadrants = new Array<>();
         for (int i = 0; i < vertical; i++) {
             for (int j = 0; j < horizontal; j++) {
-                float x = 1.5f;
+                float x = 1.2778f;
                 float quad_width = (WorldWidth - 2 * x) / (float) (horizontal);
-                Entity quadrant = entityFactory.makeQuadrantEntity(cameraEntity, -WorldWidth / 2f + x + (j + 0.5f) * quad_width, 200 + WorldHeight / 2f + i * quad_width, quad_width, quad_width);
+                Entity quadrant = entityFactory.makeQuadrantEntity(cameraEntity, -WorldWidth / 2f + x + (j + 0.5f) * quad_width, (WorldHeight + quad_width) * 0.5f + i * quad_width, quad_width, quad_width);
                 engine.addEntity(quadrant);
                 quadrants.add(quadrant);
             }
@@ -174,16 +175,16 @@ public class SpawnSystem extends EntitySystem implements Disposable {
             steering = new CustomPrioritySteering<>(stc, null);
         }
         steering.setEpsilon(0.0001f);
-        //steering.add(SteeringPresets.getCollisionAvoidance(stc, world, 6f));
+        steering.add(SteeringPresets.getCollisionAvoidance(stc, world, 3f));
         steering.add(SteeringPresets.getRayCastObstacleAvoidance(stc, world, 2));
         steering.add(SteeringPresets.getWander(stc));
         stc.steeringBehavior = steering;
 
-        stc.setMaxLinearSpeed(250);
-        stc.setMaxLinearAcceleration(80);
+        stc.setMaxLinearSpeed(15.0f / TIMESTEP);
+        stc.setMaxLinearAcceleration(8.0f / TIMESTEP);
 
-        stc.setMaxAngularSpeed(100);
-        stc.setMaxAngularAcceleration(100);
+        stc.setMaxAngularSpeed(10.0f / TIMESTEP);
+        stc.setMaxAngularAcceleration(10.0f / TIMESTEP);
         entityFactory.makeFollowEntity(fish, 2.6f);
 
         engine.addEntity(fish);
@@ -198,14 +199,14 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         float qx = bc.body.getPosition().x;
         float qy = bc.body.getPosition().y;
 
-        float x = random(qx - qc.width / 2f + 25, qx + qc.width / 2f - 25);
-        float y = random(qy - qc.height / 2f + 25, qy + qc.height / 2f - 25);
+        float x = random(qx - qc.width / 2f + 0.1389f, qx + qc.width / 2f - 0.1389f);
+        float y = random(qy - qc.height / 2f + 0.1389f, qy + qc.height / 2f - 0.1389f);
 
         Entity coin = entityFactory.makeCoinEntity(x, y, viewport);
         engine.addEntity(coin);
 
         TextureComponent tc = Mappers.texture.get(coin);
-        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, coin, 0, 0, 0, tc.width - 0.01f, tc.height - 0.01f, 0);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, coin, 0, 0, 0, tc.width - 0.05f, tc.height - 0.05f, 0);
     }
 
     private void spawnBoostInQuadrant(Entity q) {
@@ -216,14 +217,14 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         float qy = bc.body.getPosition().y;
 
         // Coin position
-        float x = random(qx - qc.width / 2f + 25, qx + qc.width / 2f - 25);
-        float y = random(qy - qc.height / 2f + 25, qy + qc.height / 2f - 25);
+        float x = random(qx - qc.width / 2f + 0.1389f, qx + qc.width / 2f - 0.1389f);
+        float y = random(qy - qc.height / 2f + 0.1389f, qy + qc.height / 2f - 0.1389f);
 
         Entity boost = entityFactory.makeBoostEntity(x, y, viewport);
         engine.addEntity(boost);
 
         TextureComponent tc = Mappers.texture.get(boost);
-        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, boost, 0, 0, 0, tc.width - 10, tc.height - 10, 0);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, boost, 0, 0, 0, tc.width - 0.05f, tc.height - 0.05f, 0);
     }
 
     private void spawnRockInQuadrant(Entity q) {
@@ -234,8 +235,8 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         float qy = bc.body.getPosition().y;
 
         // Rock position
-        float x = random(qx - qc.width / 2f + 125, qx + qc.width / 2f - 125);
-        float y = random(qy - qc.height / 2f + 125, qy + qc.height / 2f - 125);
+        float x = random(qx - qc.width / 2f + 0.694f, qx + qc.width / 2f - 0.694f);
+        float y = random(qy - qc.height / 2f + 0.694f, qy + qc.height / 2f - 0.694f);
 
         int type = MathUtils.random(1);
         Entity rock;
@@ -254,10 +255,9 @@ public class SpawnSystem extends EntitySystem implements Disposable {
 
         entityFactory.resize(rock, width, height);
 
-        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, rock, 0f, 0f, 0, tc.width - 10, tc.height - 10, 0);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, rock, 0f, 0f, 0, tc.width - 0.05f, tc.height - 0.05f, 0);
 
         // Rotate rock randomly
-        // float deg = random(-40f, 60f);
         float deg = random(0.0f, 360.0f);
         BodyComponent bodyComponent = Mappers.body.get(rock);
         bodyComponent.body.setTransform(bodyComponent.body.getPosition().x, bodyComponent.body.getPosition().y, deg * MathUtils.degRad);
@@ -273,8 +273,8 @@ public class SpawnSystem extends EntitySystem implements Disposable {
         float qy = bc.body.getPosition().y;
 
         // Rock position
-        float x = random(qx - qc.width / 2f + 150, qx + qc.width / 2f - 150);
-        float y = random(qy - qc.height / 2f + 150, qy + qc.height / 2f - 150);
+        float x = random(qx - qc.width / 2f + 0.833f, qx + qc.width / 2f - 0.833f);
+        float y = random(qy - qc.height / 2f + 0.833f, qy + qc.height / 2f - 0.833f);
 
         Entity trunk = entityFactory.makeTrunkEntity(x, y, viewport);
         BodyComponent bodyComponent = Mappers.body.get(trunk);

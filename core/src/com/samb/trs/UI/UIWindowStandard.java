@@ -3,12 +3,13 @@ package com.samb.trs.UI;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.samb.trs.Controllers.MainController;
+import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Resources.Constants;
 
 public class UIWindowStandard extends UIWindow {
 
     public UIWindowStandard(MainController mainController) {
-        super(mainController, Constants.Rendering.WorldWidth * 0.9f, Constants.Rendering.WorldWidth * 0.9f);
+        super(mainController, RenderController.wperc(90), RenderController.wperc(90));
         resetWindow();
     }
 
@@ -39,7 +40,7 @@ public class UIWindowStandard extends UIWindow {
 
     @Override
     protected void resetWindow() {
-        setSize(Constants.Rendering.WorldWidth * 0.9f, Constants.Rendering.WorldWidth * 0.9f);
+        setSize(RenderController.wperc(90), RenderController.wperc(90));
         addAction(Actions.moveTo(getCenterX(), -getHeight()));
         addAction(Actions.alpha(0.0f));
     }

@@ -50,11 +50,11 @@ public class GameLogicSystem extends IteratingSystem {
                 getEngine().getSystem(PlayerControlSystem.class).setProcessing(true);
                 getEngine().getSystem(AttachedSystem.class).setProcessing(true);
                 getEngine().getSystem(ShieldSystem.class).setProcessing(true);
-                getEngine().getSystem(SteeringSystem.class).setProcessing(true);
                 getEngine().getSystem(CollisionSystem.class).setProcessing(true);
                 getEngine().getSystem(RowingSystem.class).setProcessing(true);
 
-                if(!river_sound.isPlaying()) river_sound.play();
+                if(river_sound.isPlaying()) river_sound.stop();
+                river_sound.play();
 
                 break;
             case PAUSE:
@@ -76,7 +76,6 @@ public class GameLogicSystem extends IteratingSystem {
                 getEngine().getSystem(PlayerControlSystem.class).setProcessing(false);
                 getEngine().getSystem(AttachedSystem.class).setProcessing(false);
                 getEngine().getSystem(ShieldSystem.class).setProcessing(false);
-                getEngine().getSystem(SteeringSystem.class).setProcessing(false);
                 getEngine().getSystem(CollisionSystem.class).setProcessing(false);
                 getEngine().getSystem(RowingSystem.class).setProcessing(false);
 
@@ -94,11 +93,10 @@ public class GameLogicSystem extends IteratingSystem {
                 getEngine().getSystem(PlayerControlSystem.class).setProcessing(false);
                 getEngine().getSystem(AttachedSystem.class).setProcessing(true);
                 getEngine().getSystem(ShieldSystem.class).setProcessing(false);
-                getEngine().getSystem(SteeringSystem.class).setProcessing(true);
                 getEngine().getSystem(CollisionSystem.class).setProcessing(true);
                 getEngine().getSystem(RowingSystem.class).setProcessing(false);
 
-                if(river_sound.isPlaying()) river_sound.pause();
+                if(!river_sound.isPlaying()) river_sound.play();
                 break;
         }
 

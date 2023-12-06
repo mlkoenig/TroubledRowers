@@ -3,6 +3,7 @@ package com.samb.trs.Systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -12,6 +13,8 @@ import com.samb.trs.Components.ParticleEffectComponent;
 import com.samb.trs.Components.TextureComponent;
 import com.samb.trs.Components.TransformComponent;
 import com.samb.trs.Controllers.MainController;
+import com.samb.trs.Controllers.RenderController;
+import com.samb.trs.Resources.Constants;
 import com.samb.trs.Resources.Shaders;
 import com.samb.trs.Utilities.Mappers;
 import com.samb.trs.Utilities.ZComparator;
@@ -56,12 +59,12 @@ public class RenderingSystem extends SortedIteratingSystem {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.disableBlending();
+
         //Draw background
         drawEntity(Mappers.texture.get(renderQueue.first()), Mappers.transform.get(renderQueue.first()));
         renderQueue.removeIndex(0);
 
         batch.setShader(null);
-
         batch.enableBlending();
 
         for (Entity entity : renderQueue) {
@@ -74,13 +77,15 @@ public class RenderingSystem extends SortedIteratingSystem {
                     continue;
                 }
 
-                if (!pec.particleEffect.isComplete() && pec.timeTilDeath >= 0)
+                if (!pec.particleEffect.isComplete() && pec.timeTilDeath >= 0) {
                     pec.particleEffect.draw(batch, deltaTime);
+                }
             }
         }
 
         // Draw shadows
 
+        batch.setProjectionMatrix(camera.combined);
         batch.setShader(mainController.getRenderController().getShader(Shaders.SHADOW));
 
         for (Entity entity : renderQueue) {

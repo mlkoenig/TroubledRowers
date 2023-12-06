@@ -65,10 +65,8 @@ public class RowingSystem extends IteratingSystem {
             else
                 paddle(paddleTc, manTc, rc.frequency, Interpolation.slowFast, Interpolation.slowFast, -45, 45);
 
-            //kanuPaddel.setRotation(body.getAngle()*MathUtils.radDeg);
             Body body = Mappers.body.get(paddle).body;
             body.setTransform(body.getPosition(), paddleTc.rotation * MathUtils.degRad);
-            //body.setTransform(center.x / PPM, (center.y - RenderController.cph() * 5) / PPM, body.getAngle());
 
             if (rc.paddleSoundActive && inRangeOf(paddleTc.rotation, 45, 10f)) {
                 mainController.getSoundController().queueSound(paddle, Sounds.PADDLE);

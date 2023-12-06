@@ -44,6 +44,8 @@ public class RenderController extends BaseController{
         box2DDebugRenderer = new Box2DDebugRenderer();
         shapeRenderer = new ShapeRenderer();
         shaderController = new ShaderController(mainController);
+
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void render(float dt) {
@@ -57,7 +59,9 @@ public class RenderController extends BaseController{
     public void resize(int width, int height) {
         Constants.Rendering.WorldHeight = Constants.Rendering.calculateWorldHeight(width, height);
         staticViewport.update(width, height);
-        dynamicViewport.update(WorldWidth, WorldHeight);
+        dynamicViewport.update(width, height);
+        dynamicViewport.setWorldHeight(Constants.Rendering.WorldHeight);
+        stage.setViewport(staticViewport);
     }
 
     public static int w2w(float width) {

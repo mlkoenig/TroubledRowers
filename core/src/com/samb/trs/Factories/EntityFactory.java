@@ -88,14 +88,14 @@ public class EntityFactory {
     }
 
     public Entity makePlayerEntity(float x, float y) {
-        Entity player = makeBodyEntity(TypeComponent.BOAT, TextureRegions.KANU_RUMPF, x, y, 1, 80, 400);
+        Entity player = makeBodyEntity(TypeComponent.BOAT, TextureRegions.KANU_RUMPF, x, y, 1, 0.44f, 2.22f);
         makeMovableEntity(player, 10000.0f * Mappers.body.get(player).body.getMass(), frequencyHz);
         makeShieldComponent(player);
         makeRowingComponent(player);
         makeSteeringEntity(player);
 
         Mappers.transform.get(player).isHidden = true;
-        entityFactory.makeAttachedParticleEffect(Particles.WATER, player, 0, 0, 0, -1, -1, 0);
+        entityFactory.makeAttachedParticleEffect(Particles.WATER, player, 0, 0, 0, 0.4f, 2.0f, 0);
 
         return player.add(engine.createComponent(DeathComponent.class))
                 .add(engine.createComponent(CollisionComponent.class))
@@ -149,7 +149,7 @@ public class EntityFactory {
     }
 
     public Entity makeBackground(Entity cameraEntity) {
-        Entity entity = entityFactory.makeSprite(TextureRegions.HINTERGRUND, 0, 0, -1, WorldWidth, WorldHeight, false);
+        Entity entity = entityFactory.makeSprite(TextureRegions.HINTERGRUND, -WorldWidth / 2f, -WorldHeight / 2f, -1, WorldWidth, WorldHeight, false);
         AttachedComponent ac = engine.createComponent(AttachedComponent.class);
         ac.attachedTo = cameraEntity;
 
@@ -188,7 +188,7 @@ public class EntityFactory {
 
         if (Mappers.texture.has(entity)){
             TextureComponent tc = Mappers.texture.get(entity);
-            stc.boundingRadius = 0.5f * RenderController.s2w(Math.max(tc.width, tc.height));
+            stc.boundingRadius = 0.5f * Math.max(tc.width, tc.height);
         }
 
         return entity.add(stc);
@@ -277,8 +277,9 @@ public class EntityFactory {
         TransformComponent tc = engine.createComponent(TransformComponent.class);
         tc.z = z;
 
-        if (width > 0 && height > 0) {
-            for (ParticleEmitter emitter : pec.particleEffect.getEmitters()) {
+
+        for (ParticleEmitter emitter : pec.particleEffect.getEmitters()) {
+            if (width > 0 && height > 0) {
                 emitter.getSpawnWidth().setLow(width);
                 emitter.getSpawnWidth().setHigh(width);
                 emitter.getSpawnHeight().setLow(height);
@@ -408,8 +409,8 @@ public class EntityFactory {
     public Entity makeRowingComponent(Entity entity) {
         RowingComponent rc = engine.createComponent(RowingComponent.class);
         BodyComponent bc = Mappers.body.get(entity);
-        rc.paddle = makeBodyEntity(TypeComponent.PADDEL, TextureRegions.KANU_PADDEL, bc.body.getPosition().x, bc.body.getPosition().y, 3, 225, 23);
-        rc.man = makeSprite(TextureRegions.KANU_MANN, bc.body.getPosition().x, bc.body.getPosition().y, 2, 41, 73, true);
+        rc.paddle = makeBodyEntity(TypeComponent.PADDEL, TextureRegions.KANU_PADDEL, bc.body.getPosition().x, bc.body.getPosition().y, 3, 1.25f, 0.128f);
+        rc.man = makeSprite(TextureRegions.KANU_MANN, bc.body.getPosition().x, bc.body.getPosition().y, 2, 0.2277f, 0.4056f, true);
         rc.frequency = 1f;
 
         Mappers.transform.get(rc.paddle).isHidden = true;
@@ -424,7 +425,7 @@ public class EntityFactory {
         Mappers.mouse.get(rc.paddle).offset.set(0, -RenderController.w2h(1.0f) * 5);
 
         ac2.attachedTo = entity;
-        ac2.offset.set(0, -RenderController.w2h(1.0f) * 10);
+        ac2.offset.set(0, -RenderController.s2w(5));
 
         rc.paddle.add(ac1);
         rc.man.add(ac2);
@@ -461,7 +462,7 @@ public class EntityFactory {
             tex.height = height;
 
             if (Mappers.steering.has(entity)) {
-                Mappers.steering.get(entity).boundingRadius = 0.5f * RenderController.s2w(Math.max(width, height));
+                Mappers.steering.get(entity).boundingRadius = 0.5f * Math.max(width, height);
 
             }
 

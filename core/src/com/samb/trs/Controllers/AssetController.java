@@ -74,7 +74,7 @@ public class AssetController extends BaseController {
 
     public void initParticleEffectPools() {
         for (Particles p : Particles.values()) {
-            particleEffectController.addParticleEffect(p, getAsset(p), 1.0f);
+            particleEffectController.addParticleEffect(p, getAsset(p), RenderController.s2w(0.4f));
         }
     }
 

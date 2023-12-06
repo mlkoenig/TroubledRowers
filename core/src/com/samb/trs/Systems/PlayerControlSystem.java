@@ -19,10 +19,6 @@ public class PlayerControlSystem extends IteratingSystem {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        for (Entity entity : entities) {
-
-        }
-
         entities.clear();
     }
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.samb.trs.Controllers.MainController;
+import com.samb.trs.Controllers.RenderController;
 import com.samb.trs.Resources.BitmapFonts;
 import com.samb.trs.Resources.Bundles;
 import com.samb.trs.Resources.Constants;
@@ -36,9 +37,12 @@ public class ScoreBoard extends Table {
         third.setEllipsis(true);
         third.setAlignment(Align.center);
 
-        add(second).width(Constants.Rendering.WorldWidth / 3f - Constants.Rendering.WorldWidth*0.05f).padRight(stage.getWidth()*0.01f).padTop(stage.getHeight()*0.04f);
-        add(first).width(Constants.Rendering.WorldWidth / 3f - Constants.Rendering.WorldWidth*0.05f).padRight(stage.getWidth()*0.01f).padTop(-stage.getHeight()*0.01f);
-        add(third).width(Constants.Rendering.WorldWidth / 3f - Constants.Rendering.WorldWidth*0.05f).padTop(stage.getHeight()*0.04f);
+        float width = RenderController.wperc(33);
+        float off = RenderController.wperc(5);
+
+        add(second).width(width - off).padRight(stage.getWidth() * 0.01f).padTop(stage.getHeight() * 0.04f);
+        add(first).width(width - off).padRight(stage.getWidth() * 0.01f).padTop(-stage.getHeight() * 0.01f);
+        add(third).width(width - off).padTop(stage.getHeight() * 0.04f);
     }
 
     public void setLeaderBoardEntry(ILeaderBoardEntry entry, I18NBundle bundle){

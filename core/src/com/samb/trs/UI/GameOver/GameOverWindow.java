@@ -60,12 +60,13 @@ public class GameOverWindow extends UIWindowStandard {
 
     private void addActors(){
         add(scoreTable).row();
-        add(separator).width(Constants.Rendering.WorldWidth * 0.9f - stage.getWidth() * 0.25f)
+        add(separator).width(RenderController.wperc(90) - stage.getWidth() * 0.25f)
+                .height(RenderController.hperc(0.8f))
                 .padTop(RenderController.hperc(2.5f))
                 .row();
         add(scoreBoard).padLeft(RenderController.wperc(5))
                 .padRight(RenderController.wperc(5))
-                .padTop(RenderController.hperc(2.5f))
+                .padTop(RenderController.wperc(3f))
                 .row();
         add(buttonTable).padTop(RenderController.hperc(5));
     }

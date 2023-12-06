@@ -8,7 +8,7 @@ public class Constants {
 
     // GENERAL CONSTANTS
     public static class General {
-        public static final boolean DEBUGGING = true;
+        public static final boolean DEBUGGING = false;
     }
 
     public static class UI {
@@ -19,8 +19,8 @@ public class Constants {
     public static class Camera {
         // CAMERA CONSTANTS
         public static final float VELOCITY_INCREASE_TIMER = 20;
-        public static final float VELOCITY_INCREASE = 2;
-        public static final float START_VELOCITY = 12;
+        public static final float VELOCITY_INCREASE = 1.5f;
+        public static final float START_VELOCITY = 7;
         public static final float MAX_VELOCITY = 20;
     }
 

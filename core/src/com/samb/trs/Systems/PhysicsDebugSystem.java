@@ -38,7 +38,7 @@ public class PhysicsDebugSystem extends IteratingSystem {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        camera.combined.scl(RenderController.w2w(1.0f));
+
         if (Constants.General.DEBUGGING)
             debugRenderer.render(world, camera.combined);
 
@@ -51,7 +51,7 @@ public class PhysicsDebugSystem extends IteratingSystem {
             shapeRenderer.setColor(Color.GREEN);
             shapeRenderer.ellipse(sc.getPosition().x - sc.getBoundingRadius(),
                     sc.getPosition().y - sc.getBoundingRadius(),
-                    2*sc.getBoundingRadius(), 2*sc.getBoundingRadius(), 50);
+                    2 * sc.getBoundingRadius(), 2 * sc.getBoundingRadius(), 50);
             shapeRenderer.setColor(Color.RED);
             shapeRenderer.line(bc.body.getPosition(), bc.body.getPosition().cpy().add(bc.body.getLinearVelocity()));
             shapeRenderer.setColor(Color.BLUE);
@@ -66,6 +66,9 @@ public class PhysicsDebugSystem extends IteratingSystem {
                 shapeRenderer.point(bc.contact.x, bc.contact.y, 0.0f);
                 bc.contact = null;
             }
+
+            Vector2 target = getEngine().getSystem(MouseControlSystem.class).getEventInputProcessor().getTarget();
+            shapeRenderer.circle(target.x, target.y, 0.1f, 10);
         }
         shapeRenderer.end();
 

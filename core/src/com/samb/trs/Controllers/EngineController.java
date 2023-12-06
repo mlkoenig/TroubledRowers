@@ -33,7 +33,6 @@ public class EngineController extends BaseController implements Updatable {
         engine.addSystem(new ShieldSystem(mainController, eventInputProcessor, score));
         engine.addSystem(new PlayerControlSystem(eventInputProcessor));
         engine.addSystem(new CheckOutsideSystem());
-        engine.addSystem(new SteeringSystem());
         engine.addSystem(new RowingSystem(mainController));
         engine.addSystem(new CollisionSystem(mainController, score));
         engine.addSystem(new CollectSystem());

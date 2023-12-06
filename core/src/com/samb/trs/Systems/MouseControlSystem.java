@@ -43,6 +43,7 @@ public class MouseControlSystem extends IteratingSystem {
         for (Entity entity : entityQueue) {
             MouseComponent mc = Mappers.mouse.get(entity);
             TextureComponent tc = Mappers.texture.get(entity);
+
             if (eip.getTarget().y + mc.offset.y >= (camera.position.y - Constants.Rendering.WorldHeight / 2f + tc.height / 2f)) {
                 mc.mouseJoint.setTarget(eip.getTarget().add(mc.offset));
                 eip.getTarget().sub(mc.offset);
@@ -67,9 +68,7 @@ public class MouseControlSystem extends IteratingSystem {
         entityQueue.clear();
     }
 
-    private Vector2 getMouseTarget() {
-        Vector3 input = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-        input = camera.unproject(input, viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        return new Vector2(RenderController.s2w(input.x), RenderController.s2w(input.y));
+    public EventInputProcessor getEventInputProcessor() {
+        return eip;
     }
 }

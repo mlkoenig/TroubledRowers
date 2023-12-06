@@ -168,15 +168,15 @@ public class CollisionSystem extends IteratingSystem {
                     case SHIELD | COIN:
                         first = tc.type == BOOST || tc.type == COIN ? entity : collidedEntity;
 
-                        body1 = Mappers.body.get(first).body;
-
                         if (Mappers.type.get(first).type == BOOST) {
                             score.increaseBoosts();
                             mainController.getSoundController().queueSound(first, Sounds.BOOST);
+                            entityFactory.makeParticleEffect(Particles.BOOST, contactPoint.x, contactPoint.y);
                         }
                         if (Mappers.type.get(first).type == COIN) {
                             score.increaseCollectedCoins();
                             mainController.getSoundController().queueSound(first, Sounds.COIN);
+                            entityFactory.makeParticleEffect(Particles.COIN, contactPoint.x, contactPoint.y);
                         }
                         Mappers.collect.get(first).isCollected = true;
                         break;
@@ -244,7 +244,7 @@ public class CollisionSystem extends IteratingSystem {
         getEngine().addEntity(e);
 
         TextureComponent tc = Mappers.texture.get(e);
-        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, e, 0, 0, 0, tc.width - 10, tc.height - 10, 0);
+        entityFactory.makeAttachedParticleEffect(Particles.ROCK_WATER, e, 0, 0, 0, tc.width - 0.05f, tc.height - 0.05f, 0);
         mainController.getSoundController().queueSound(e, Sounds.COIN_DROP);
     }
 

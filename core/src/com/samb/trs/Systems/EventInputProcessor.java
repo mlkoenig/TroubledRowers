@@ -1,5 +1,8 @@
 package com.samb.trs.Systems;
 
+import static com.samb.trs.Resources.Constants.Rendering.WorldHeight;
+import static com.samb.trs.Resources.Constants.Rendering.WorldWidth;
+
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -33,11 +36,12 @@ public class EventInputProcessor implements InputProcessor {
         this.camera = camera;
         this.viewport = viewport;
         this.engine = engine;
-        lastTouch = new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() * 0.6f);
+        lastTouch = new Vector2(RenderController.wperc(50), RenderController.hperc(60));
         lastPos = new Vector2();
 
         input = new Vector2();
         unproject(input, lastTouch);
+        unproject(lastPos, lastTouch);
 
         offset = new Vector2();
         target = new Vector2();
@@ -56,33 +60,21 @@ public class EventInputProcessor implements InputProcessor {
         unproject(input, Gdx.input.getX(0), Gdx.input.getY(0));
         if (isDown) {
             lastTouch.set(Gdx.input.getX(0), Gdx.input.getY(0));
-            target.set(input.x + offset.x, input.y + offset.y).scl(RenderController.s2w(1.0f));
+            target.set(input.x + offset.x, input.y + offset.y);
         } else {
             unproject(lastPos, lastTouch);
-            target.set(lastPos.x + offset.x, lastPos.y + offset.y).scl(RenderController.s2w(1.0f));
+            target.set(lastPos.x + offset.x, lastPos.y + offset.y);
         }
     }
 
-    private void unproject(Vector2 to, float x, float y) {
-        Vector3 temp = new Vector3(x, y, 0);
-        temp = camera.unproject(temp, viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        to.set(temp.x, temp.y);
+    private void unproject(Vector2 out, float screenX, float screenY) {
+        Vector3 temp = new Vector3(screenX, screenY, 0);
+        temp = camera.unproject(temp);
+        out.set(temp.x, temp.y);
     }
 
     private void unproject(Vector2 to, Vector2 un) {
         unproject(to, un.x, un.y);
-    }
-
-    private Vector2 project(float x, float y) {
-        Vector3 temp = new Vector3(x, y, 0);
-        temp = camera.project(temp, viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        return new Vector2(temp.x, temp.y);
-    }
-
-    private Vector2 project(Vector2 vec) {
-        Vector3 temp = new Vector3(vec.x, vec.y, 0);
-        temp = camera.project(temp, viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-        return new Vector2(temp.x, temp.y);
     }
 
     @Override
@@ -167,6 +159,6 @@ public class EventInputProcessor implements InputProcessor {
         offset.setZero();
         target.setZero();
         lastPos.setZero();
-        lastTouch.set(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() * 0.6f);
+        lastTouch.set(RenderController.wperc(50), RenderController.hperc(60));
     }
 }

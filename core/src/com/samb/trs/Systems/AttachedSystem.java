@@ -9,12 +9,11 @@ import com.samb.trs.Components.AttachedComponent;
 import com.samb.trs.Components.BodyComponent;
 import com.samb.trs.Components.ParticleEffectComponent;
 import com.samb.trs.Components.TransformComponent;
-import com.samb.trs.Resources.Constants;
 import com.samb.trs.Utilities.Mappers;
 
 public class AttachedSystem extends IteratingSystem {
 
-    private Array<Entity> tcQueue, particleQueue, bodyQueue;
+    private final Array<Entity> tcQueue, particleQueue, bodyQueue;
 
     @SuppressWarnings("unchecked")
     public AttachedSystem() {
@@ -43,7 +42,7 @@ public class AttachedSystem extends IteratingSystem {
                 bodyComp.body.setLinearDamping(bc.body.getLinearDamping());
                 bodyComp.body.setAngularVelocity(bc.body.getAngularVelocity());
                 bodyComp.body.setAngularDamping(bc.body.getAngularDamping());
-            } else if(Mappers.transform.has(ac.attachedTo)) {
+            } else if (Mappers.transform.has(ac.attachedTo)) {
                 TransformComponent tc = Mappers.transform.get(ac.attachedTo);
                 bodyComp.body.setTransform(
                         (tc.position.x + ac.offset.x),

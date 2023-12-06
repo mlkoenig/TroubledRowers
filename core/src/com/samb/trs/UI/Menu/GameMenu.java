@@ -26,9 +26,12 @@ public class GameMenu extends Group implements UIElement {
     private BlinkLabel pressToPlay;
     private ImageButton settingsButton;
 
+    private float y_pos;
+
     public GameMenu(MainController mainController) {
         this.mainController = mainController;
         this.assetController = mainController.getAssetController();
+        this.y_pos = RenderController.hperc(95);
 
         initCoins();
         initPressToPlay();
@@ -39,12 +42,12 @@ public class GameMenu extends Group implements UIElement {
     private void initCoins() {
         this.coinIcon = new CollectIcon(mainController,
                 new TextureRegionDrawable(assetController.getAsset(TextureRegions.COIN_ANZEIGE)));
-        coinIcon.setPosition(RenderController.wperc(80), RenderController.hperc(92));
+        coinIcon.setPosition(RenderController.wperc(80), y_pos);
     }
 
     private void initSettingsButton() {
         this.settingsButton = new ImageButton(new TextureRegionDrawable(assetController.getAsset(TextureRegions.GEAR_BUTTON)));
-        settingsButton.setBounds(RenderController.wperc(5), RenderController.hperc(92),
+        settingsButton.setBounds(RenderController.wperc(5), y_pos - RenderController.wperc(2.25f),
                 RenderController.wperc(10), RenderController.wperc(10));
     }
 

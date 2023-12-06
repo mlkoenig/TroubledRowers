@@ -31,12 +31,17 @@ public class GameHud extends Group implements UIElement, Updatable {
     private float safeHeight;
     private Score score;
 
+    private float y_pos;
+
     public GameHud(MainController mainController) {
         this.mainController = mainController;
         this.assetController = mainController.getAssetController();
         this.viewport = mainController.getRenderController().getStaticViewport();
         this.safeHeight = mainController.getRenderController().getIosSafeArea().y;
         this.score = mainController.getGameWorldController().getScore();
+        this.y_pos = RenderController.hperc(95) - safeHeight * 0.2f;
+
+
 
         initIcons();
         initButtons();
@@ -54,8 +59,7 @@ public class GameHud extends Group implements UIElement, Updatable {
     private void initScore() {
         scoreLabel = new Label("0", assetController.getAsset(BitmapFonts.BOLD100, Color.WHITE));
         scoreLabel.setAlignment(Align.center);
-        scoreLabel.setPosition(RenderController.wperc(50),
-                RenderController.hperc(93.5f) - safeHeight);
+        scoreLabel.setPosition(RenderController.wperc(50), y_pos);
     }
 
     private void initIcons() {
@@ -64,17 +68,13 @@ public class GameHud extends Group implements UIElement, Updatable {
         this.boostIcon = new CollectIcon(mainController,
                 new TextureRegionDrawable(assetController.getAsset(TextureRegions.BOOST_ANZEIGE)));
 
-        coinIcon.setPosition(RenderController.wperc(62.5f),
-                RenderController.hperc(92) - safeHeight);
-
-        boostIcon.setPosition(RenderController.wperc(80),
-                RenderController.hperc(92) - safeHeight);
+        coinIcon.setBounds(RenderController.wperc(62.5f), y_pos, RenderController.wperc(15), RenderController.wperc(15));
+        boostIcon.setBounds(RenderController.wperc(80), y_pos, RenderController.wperc(15), RenderController.wperc(15));
     }
 
     private void initButtons() {
         this.pauseButton = new ImageButton(new TextureRegionDrawable(assetController.getAsset(TextureRegions.PAUSE_BUTTON)));
-        pauseButton.setBounds(RenderController.wperc(5), RenderController.hperc(92) + RenderController.wperc(3.5f),
-                RenderController.wperc(8), RenderController.wperc(8) - safeHeight);
+        pauseButton.setBounds(RenderController.wperc(5), y_pos - RenderController.wperc(2.25f), RenderController.wperc(10), RenderController.wperc(10));
 
         this.shieldButton = new ImageButton(new TextureRegionDrawable(assetController.getAsset(TextureRegions.SHIELD_BUTTON)));
         shieldButton.setBounds(RenderController.wperc(5), RenderController.wperc(5),
