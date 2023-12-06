@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.samb.trs.Resources.*;
-import com.samb.trs.Utilities.BodyEditorLoader;
+import aurelienribon.bodyeditor.BodyEditorLoader;
 
 import java.util.HashMap;
 
